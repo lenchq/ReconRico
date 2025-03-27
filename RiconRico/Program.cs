@@ -1,2 +1,2 @@
-﻿using var game = new RiconRico.Game1();
+﻿using var game = new RiconRico.Game();
 game.Run();
