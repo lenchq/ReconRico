@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace RiconRico;
+namespace ReconRico;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
