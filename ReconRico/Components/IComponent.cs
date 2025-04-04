@@ -1,4 +1,4 @@
-namespace ReconRico.Component;
+namespace ReconRico.Components;
 
 public interface IComponent
 {

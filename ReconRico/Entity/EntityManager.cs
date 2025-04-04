@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using ReconRico.Components;
+using ReconRico.Extensions;
 
 namespace ReconRico.Entity;
 
@@ -8,19 +10,62 @@ public static class EntityManager
 
     private static long _nextEntityId;
 
+    public static Entity CreateEntity()
+    {
+        var entity = new Entity(_nextEntityId++);
+        Entities.Add(_nextEntityId, entity);
+        return entity;
+    }
+
     public static void AddEntity(Entity entity)
     {
-        Entities.Add(_nextEntityId++, entity);
+        Entities.Add(entity.Id, entity);
     }
 
     public static void RemoveEntity(long entityId)
     {
-        if (!Entities.ContainsKey(entityId))
+        if (!Entities.TryGetValue(entityId, out var entity))
         {
-            Debug.WriteLine($"{nameof(RemoveEntity)}: Entity {entityId} not found");
+            Console.WriteLine($"{nameof(RemoveEntity)}: Entity {entityId} not found");
             return;
         }
 
+        foreach (var component in entity.Components)
+        {
+            component.Destroy();
+        }
+
+        entity.Destroy();
         Entities.Remove(entityId);
+    }
+
+    public static Entity GetEntityWithComponent<T>() where T : IComponent
+    {
+        return Entities.Values
+            .First(entity =>
+                entity.HasComponent<T>());
+    }
+    public static IEnumerable<Entity> GetEntitiesWithComponent<T>() where T : IComponent
+    {
+        return Entities.Values
+            .Where(entity =>
+                entity.HasComponent<T>());
+    }
+
+    public static IEnumerable<Entity> GetEntitiesWithAny(params Type[] types)
+    {
+        return Entities.Values
+            .Where(entity => entity.HasAnyComponent(types));
+    }
+
+    public static IEnumerable<Entity> GetEntitiesWithAll(params Type[] types)
+    {
+        return Entities.Values
+            .Where(entity => types
+                .IsSubsetOf(entity.Components
+                    .Select(component => component.GetType()
+                    )
+                )
+            );
     }
 }

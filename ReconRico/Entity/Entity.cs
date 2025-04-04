@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ReconRico.Component;
+using ReconRico.Components;
 
 namespace ReconRico.Entity;
 
-public abstract class Entity(long id)
+public class Entity(long id)
 {
     public long Id { get; } = id;
     public List<IComponent> Components => _components.Values.ToList();
@@ -17,7 +17,7 @@ public abstract class Entity(long id)
     {
         var componentType = component.GetType();
         if (_components.ContainsKey(componentType))
-            Debug.WriteLine($"[E_{Id}]: Component {componentType} already registered");
+            Console.WriteLine($"[E_{Id}]: Components {componentType} already registered");
 
         _components.Add(component.GetType(), component);
     }
@@ -27,15 +27,20 @@ public abstract class Entity(long id)
         if (_components.ContainsKey(typeof(T)))
             _components.Remove(typeof(T));
         else
-            Debug.WriteLine($"[E_{Id}]: Cannot remove component {typeof(T)}");
+            Console.WriteLine($"[E_{Id}]: Cannot remove component {typeof(T)}");
     }
 
+    public T GetComponent<T>() where T : IComponent => (T)_components[typeof(T)];
+
     public bool HasComponent<T>() => _components.ContainsKey(typeof(T));
+
+    public bool HasAnyComponent(params Type[] types) =>
+        _components.Values.Any(component => types.Contains(component.GetType()));
 
     public virtual void Destroy()
     {
         foreach (var component in _components.Values)
             component.Destroy();
-        Debug.WriteLine($"[E_{Id}]: Entity destroyed");
+        Console.WriteLine($"[E_{Id}]: Entity destroyed");
     }
 }

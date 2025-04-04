@@ -1,79 +1,86 @@
 using NUnit.Framework;
-using ReconRico.Component;
-using ReconRico.Entity;
+using ReconRico.Components;
 
 namespace ReconRico.Tests;
 
-public class TestComponent : IComponent;
-
-public class DestroyComponent : IComponent
+public class TestComponent : IComponent
 {
     public bool WasDestroyed { get; private set; }
-
-    public void Destroy()
-    {
-        WasDestroyed = true;
-    }
+    public void Destroy() => WasDestroyed = true;
 }
 
 [TestFixture]
 public class EntityTests
 {
-    private class TestEntity(long id) : Entity.Entity(id);
+    private Entity.Entity _entity;
+
+    [SetUp]
+    public void Setup() => _entity = new Entity.Entity(1);
 
     [Test]
     public void Constructor_SetsId()
     {
-        var entity = new TestEntity(42);
-        Assert.That(entity.Id, Is.EqualTo(42));
+        Assert.That(_entity.Id, Is.EqualTo(1));
     }
 
     [Test]
     public void RegisterComponent_AddsComponent()
     {
-        var entity = new TestEntity(1);
         var component = new TestComponent();
-        entity.RegisterComponent(component);
-        Assert.That(entity.Components, Contains.Item(component));
+        _entity.RegisterComponent(component);
+
+        Assert.That(_entity.Components, Has.Count.EqualTo(1));
+        Assert.That(_entity.GetComponent<TestComponent>(), Is.EqualTo(component));
     }
 
     [Test]
-    public void RegisterComponent_DuplicateType_DoesNotAdd()
+    public void RemoveComponent_RemovesExistingComponent()
     {
-        var entity = new TestEntity(1);
-        var comp1 = new TestComponent();
-        var comp2 = new TestComponent();
-        entity.RegisterComponent(comp1);
-        entity.RegisterComponent(comp2);
-        Assert.That(entity.Components.Count, Is.EqualTo(1));
-        Assert.That(entity.Components[0], Is.EqualTo(comp1));
-    }
-
-    [Test]
-    public void RemoveComponent_Existing_RemovesIt()
-    {
-        var entity = new TestEntity(1);
         var component = new TestComponent();
-        entity.RegisterComponent(component);
-        entity.RemoveComponent<TestComponent>();
-        Assert.That(entity.Components, Is.Empty);
+        _entity.RegisterComponent(component);
+        _entity.RemoveComponent<TestComponent>();
+
+        Assert.That(_entity.HasComponent<TestComponent>(), Is.False);
     }
 
     [Test]
-    public void RemoveComponent_NonExistent_DoesNothing()
+    public void GetComponent_ReturnsCorrectComponent()
     {
-        var entity = new TestEntity(1);
-        entity.RemoveComponent<TestComponent>();
-        Assert.That(entity.Components, Is.Empty);
+        var component = new TestComponent();
+        _entity.RegisterComponent(component);
+
+        Assert.That(_entity.GetComponent<TestComponent>(), Is.EqualTo(component));
+    }
+
+    [Test]
+    public void HasComponent_ReturnsTrueForExisting()
+    {
+        _entity.RegisterComponent(new TestComponent());
+
+        Assert.That(_entity.HasComponent<TestComponent>(), Is.True);
+    }
+
+    [Test]
+    public void HasComponent_ReturnsFalseForNonExisting()
+    {
+        Assert.That(_entity.HasComponent<TestComponent>(), Is.False);
+    }
+
+    [Test]
+    public void HasAnyComponent_ReturnsTrueForMatchingType()
+    {
+        _entity.RegisterComponent(new TestComponent());
+
+        Assert.That(_entity.HasAnyComponent(typeof(TestComponent)), Is.True);
     }
 
     [Test]
     public void Destroy_CallsDestroyOnComponents()
     {
-        var entity = new TestEntity(1);
-        var component = new DestroyComponent();
-        entity.RegisterComponent(component);
-        entity.Destroy();
+        var component = new TestComponent();
+        _entity.RegisterComponent(component);
+        _entity.Destroy();
+
         Assert.That(component.WasDestroyed, Is.True);
     }
 }
