@@ -69,16 +69,8 @@ public class Game : Microsoft.Xna.Framework.Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
-        // if (Keyboard.GetState().IsKeyDown(Keys.Right))
-        // {
-        //     var velocity = EntityManager.Entities[1].GetComponent<VelocityComponent>();
-        //     velocity.Velocity += new Vector2(.3f, 0);
-        // }
         
         _controlSystem.Update(gameTime);
-
-        // TODO: Add your update logic here
 
         base.Update(gameTime);
     }

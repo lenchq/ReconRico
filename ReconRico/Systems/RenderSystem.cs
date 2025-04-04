@@ -32,7 +32,7 @@ public class RenderSystem(SpriteBatch spriteBatch)
                 transform.Layer);
         }
 
-        if (GameSettings.DEBUG_DRAW_TRANSFORM)
+        if (GameSettings.TRANSFORM_GIZMO)
         {
             foreach (var entity in EntityManager.GetEntitiesWithAll(
                          typeof(TransformComponent),
@@ -45,7 +45,7 @@ public class RenderSystem(SpriteBatch spriteBatch)
         }
         // Draw transform
 
-        if (GameSettings.DEBUG_DRAW_HITBOX)
+        if (GameSettings.HITBOX_GIZMO)
         {
             foreach (var entity in EntityManager.GetEntitiesWithAll(
                          typeof(TransformComponent),

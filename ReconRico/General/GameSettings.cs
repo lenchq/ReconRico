@@ -21,11 +21,11 @@ static class GameSettings
     #region DEBUG CONSTS
 
 #if DEBUG
-    public const bool DEBUG_DRAW_HITBOX = true;
-    public const bool DEBUG_DRAW_TRANSFORM = true;
+    public const bool HITBOX_GIZMO = true;
+    public const bool TRANSFORM_GIZMO = true;
 #else
-    public const bool DEBUG_DRAW_HITBOX = false;
-    public const bool DEBUG_DRAW_TRANSFORM = false;
+    public const bool HITBOX_GIZMO = false;
+    public const bool TRANSFORM_GIZMO = false;
 #endif
 
     #endregion
