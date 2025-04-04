@@ -69,8 +69,8 @@ public class RenderSystem(SpriteBatch spriteBatch)
 
         var rect = new Texture2D(spriteBatch.GraphicsDevice, width, height);
         var colors = new Color[height][];
-        for (var i = 0; i < width; i++)
-            colors[i] = Enumerable.Repeat((Color)fillColor, height).ToArray();
+        for (var i = 0; i < height; i++)
+            colors[i] = Enumerable.Repeat((Color)fillColor, width).ToArray();
 
         for (var i = 0; i < height; i++)
         for (var j = 0; j < width; j++)
