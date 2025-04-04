@@ -18,7 +18,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private RenderSystem _renderSystem;
     private MovementSystem _movementSystem;
-    private ControlSystem _controlSystem;
+    private PlayerControlSystem _playerControlSystem;
 
     public Game()
     {
@@ -33,7 +33,7 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         _movementSystem = new MovementSystem();
-        _controlSystem = new ControlSystem();
+        _playerControlSystem = new PlayerControlSystem();
         base.Initialize();
     }
 
@@ -59,7 +59,7 @@ public class Game : Microsoft.Xna.Framework.Game
         });
         entity.RegisterComponent(new HitBoxComponent()
         {
-            HitBox = new Vector2(32, 32),
+            HitBox = new Vector2(32, 16),
         });
         entity.RegisterComponent(new PlayerComponent());
     }
@@ -70,7 +70,7 @@ public class Game : Microsoft.Xna.Framework.Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
         
-        _controlSystem.Update(gameTime);
+        _playerControlSystem.Update(gameTime);
 
         base.Update(gameTime);
     }

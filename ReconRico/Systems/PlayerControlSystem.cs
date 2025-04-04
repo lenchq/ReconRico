@@ -6,7 +6,7 @@ using ReconRico.General;
 
 namespace ReconRico.Systems;
 
-public class ControlSystem
+public class PlayerControlSystem
 {
     public void Update(GameTime gameTime)
     {
