@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ReconRico.Components;
-using ReconRico.Entity;
 using ReconRico.General;
 
 namespace ReconRico.Systems;
@@ -13,7 +12,7 @@ public class PlayerControlSystem
         var player = EntityManager.GetEntityWithComponent<PlayerComponent>();
 
         var moveVelocity = Vector2.Zero;
-        
+
         var keyboard = Keyboard.GetState();
         if (keyboard.IsKeyDown(GameSettings.PLAYER_MOVE_UP_KEY))
         {
@@ -23,7 +22,7 @@ public class PlayerControlSystem
         {
             moveVelocity += Vector2.UnitY * GameSettings.PLAYER_MOVE_VERTICAL_SPEED;
         }
-        
+
         if (keyboard.IsKeyDown(GameSettings.PLAYER_MOVE_LEFT_KEY))
         {
             moveVelocity -= Vector2.UnitX * GameSettings.PLAYER_MOVE_HORIZONTAL_SPEED;
@@ -32,6 +31,23 @@ public class PlayerControlSystem
         {
             moveVelocity += Vector2.UnitX * GameSettings.PLAYER_MOVE_HORIZONTAL_SPEED;
         }
+
+        var mouse = Mouse.GetState();
+        var mouseInBounds = mouse.X is > 0 and < GameSettings.WINDOW_WIDTH
+                            && mouse.Y is > 0 and < GameSettings.WINDOW_HEIGHT;
+
+        if (mouseInBounds)
+        {
+            var transform = player.GetComponent<TransformComponent>();
+
+            var fromPlayerToCursor = mouse.Position.ToVector2() - transform.Position;
+            var fromPlayerToCursorAngle =
+                (float)Math.Atan2(fromPlayerToCursor.Y, fromPlayerToCursor.X) + MathHelper.PiOver2;
+            
+            transform.Rotation = fromPlayerToCursorAngle;
+            moveVelocity.Rotate(fromPlayerToCursorAngle);
+        }
+
 
         var playerVelocity = player.GetComponent<VelocityComponent>();
         playerVelocity.Velocity += moveVelocity;

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using ReconRico.Components;
 
-namespace ReconRico.Entity;
+namespace ReconRico;
 
 public class Entity(long id)
 {
@@ -31,6 +31,17 @@ public class Entity(long id)
     }
 
     public T GetComponent<T>() where T : IComponent => (T)_components[typeof(T)];
+    public bool TryGetComponent<T>(out T component) where T : IComponent
+    {
+        if (!_components.ContainsKey(typeof(T)))
+        {
+            component = default;
+            return false;
+        }
+        
+        component = (T)_components[typeof(T)];
+        return true;
+    }
 
     public bool HasComponent<T>() => _components.ContainsKey(typeof(T));
 

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReconRico.Components;
-using ReconRico.Entity;
+using ReconRico.General;
 using ReconRico.Systems;
 
 namespace ReconRico;
@@ -19,12 +19,13 @@ public class Game : Microsoft.Xna.Framework.Game
     private RenderSystem _renderSystem;
     private MovementSystem _movementSystem;
     private PlayerControlSystem _playerControlSystem;
+    private ColliderSystem _colliderSystem;
 
     public Game()
     {
         _graphics = new GraphicsDeviceManager(this);
-        _graphics.PreferredBackBufferWidth = 1280;
-        _graphics.PreferredBackBufferHeight = 720;
+        _graphics.PreferredBackBufferWidth = GameSettings.WINDOW_WIDTH;
+        _graphics.PreferredBackBufferHeight = GameSettings.WINDOW_HEIGHT;
         _graphics.ApplyChanges();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -34,6 +35,7 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _movementSystem = new MovementSystem();
         _playerControlSystem = new PlayerControlSystem();
+        _colliderSystem = new ColliderSystem();
         base.Initialize();
     }
 
@@ -57,11 +59,38 @@ public class Game : Microsoft.Xna.Framework.Game
         {
             Texture = ballTexture,
         });
-        entity.RegisterComponent(new HitBoxComponent()
+        entity.RegisterComponent(new ColliderComponent()
         {
-            HitBox = new Vector2(32, 16),
+            Collider = new Vector2(32, 16),
         });
         entity.RegisterComponent(new PlayerComponent());
+
+        var entity1 = EntityManager.CreateEntity();
+        entity1.RegisterComponent(new TransformComponent
+        {
+            Position = new Vector2(200, 200),
+        });
+        entity1.RegisterComponent(new SpriteComponent
+        {
+            Texture = ballTexture,
+        });
+        entity1.RegisterComponent(new ColliderComponent()
+        {
+            Collider = new Vector2(32, 32),
+        });
+        entity.RegisterComponent(new ColliderResponse
+        {
+            OnCollision = (e) =>
+            {
+                Console.WriteLine($"Collision {e.SourceId} {e.TargetId} {e.ContactPoint}");
+                var target = EntityManager.Entities[e.TargetId];
+                if (target.TryGetComponent<VelocityComponent>(out var velocity)
+                    && target.TryGetComponent<TransformComponent>(out var transform))
+                {
+                    
+                }
+            }
+        });
     }
 
     protected override void Update(GameTime gameTime)
@@ -69,8 +98,10 @@ public class Game : Microsoft.Xna.Framework.Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        
+
         _playerControlSystem.Update(gameTime);
+        _colliderSystem.Update(gameTime);
+        _movementSystem.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -81,7 +112,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
         // TODO: Add your drawing code here
         _renderSystem.Render(gameTime);
-        _movementSystem.Update(gameTime);
 
         base.Draw(gameTime);
     }

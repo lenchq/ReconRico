@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using ReconRico.Components;
-using ReconRico.Entity;
 
 namespace ReconRico.Systems;
 

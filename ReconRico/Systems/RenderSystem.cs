@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReconRico.Components;
-using ReconRico.Entity;
 using ReconRico.General;
 
 namespace ReconRico.Systems;
@@ -18,15 +17,14 @@ public class RenderSystem(SpriteBatch spriteBatch)
             var sprite = entity.GetComponent<SpriteComponent>();
             var transform = entity.GetComponent<TransformComponent>();
 
-            var transformCenter = transform.Position
-                                  - new Vector2(sprite.Texture.Width / 2f, sprite.Texture.Height / 2f);
+            var offset = new Vector2(sprite.Texture.Width / 2f, sprite.Texture.Height / 2f);
 
             spriteBatch.Draw(sprite.Texture,
-                transformCenter,
+                transform.Position,
                 null,
                 sprite.ColorMask,
                 transform.Rotation,
-                Vector2.Zero,
+                offset,
                 transform.Scale,
                 sprite.SpriteEffects,
                 transform.Layer);
@@ -36,25 +34,25 @@ public class RenderSystem(SpriteBatch spriteBatch)
         {
             foreach (var entity in EntityManager.GetEntitiesWithAll(
                          typeof(TransformComponent),
-                         typeof(HitBoxComponent)))
+                         typeof(ColliderComponent)))
             {
                 var transform = entity.GetComponent<TransformComponent>();
 
-                DrawBorderedRectangle(transform.Position.ToPoint(), new Point(4), Color.Lime, 2);
+                DrawBorderedRectangle(transform.Position.ToPoint(), new Point(4), Color.Lime, 2, transform.Rotation);
             }
         }
-        // Draw transform
 
-        if (GameSettings.HITBOX_GIZMO)
+        if (GameSettings.COLLIDER_GIZMO)
         {
             foreach (var entity in EntityManager.GetEntitiesWithAll(
                          typeof(TransformComponent),
-                         typeof(HitBoxComponent)))
+                         typeof(ColliderComponent)))
             {
-                var hitbox = entity.GetComponent<HitBoxComponent>();
+                var collider = entity.GetComponent<ColliderComponent>();
                 var transform = entity.GetComponent<TransformComponent>();
 
-                DrawBorderedRectangle(transform.Position.ToPoint(), hitbox.HitBox.ToPoint(), Color.Lime, 2);
+                DrawBorderedRectangle(transform.Position.ToPoint(), collider.Collider.ToPoint(), Color.Lime, 2,
+                    transform.Rotation);
             }
         }
 
@@ -85,14 +83,19 @@ public class RenderSystem(SpriteBatch spriteBatch)
         return rect;
     }
 
-    private void DrawBorderedRectangle(Point position, Point size, Color color, int border)
+    private void DrawBorderedRectangle(Point position, Point size, Color color, int border, float rotation)
     {
         var rect = CreateRectangle(size.X, size.Y, border: border, borderColor: color);
 
+        var originToCenter = (size / new Point(2)).ToVector2();
         spriteBatch.Draw(rect,
-            new Rectangle((int)(position.X - size.X / 2f),
-                (int)(position.Y - size.Y / 2f), size.X,
-                size.Y),
-            Color.GreenYellow);
+            position.ToVector2(),
+            null,
+            Color.White,
+            rotation,
+            new Vector2(size.X / 2f, size.Y / 2f),
+            1,
+            SpriteEffects.None,
+            1);
     }
 }

@@ -2,7 +2,7 @@ using System.Diagnostics;
 using ReconRico.Components;
 using ReconRico.Extensions;
 
-namespace ReconRico.Entity;
+namespace ReconRico;
 
 public static class EntityManager
 {

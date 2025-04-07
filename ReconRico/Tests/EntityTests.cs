@@ -12,10 +12,10 @@ public class TestComponent : IComponent
 [TestFixture]
 public class EntityTests
 {
-    private Entity.Entity _entity;
+    private Entity _entity;
 
     [SetUp]
-    public void Setup() => _entity = new Entity.Entity(1);
+    public void Setup() => _entity = new Entity(1);
 
     [Test]
     public void Constructor_SetsId()
