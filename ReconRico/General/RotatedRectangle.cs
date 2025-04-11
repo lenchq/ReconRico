@@ -5,10 +5,14 @@ public struct RotatedRectangle
 {
     public Vector2 Position;
     public Vector2 Size;
-    public float Rotation; // In radians
+    
+    /// <summary>
+    /// Rotation in radians
+    /// </summary>
+    public float Rotation;
 
-    private Vector2[] _corners;
-    private Vector2[] _axes;
+    private readonly Vector2[] _corners;
+    private readonly Vector2[] _axes;
 
     public RotatedRectangle(Vector2 position, Vector2 size, float rotation = 0f)
     {
@@ -30,36 +34,30 @@ public struct RotatedRectangle
 
     public bool Intersects(RotatedRectangle other)
     {
+        var refThis = this;
         // Check all axes of both rectangles
-        foreach (var axis in _axes)
+        if (_axes.Any(axis => !IsOverlappingOnAxis(refThis, other, axis)))
         {
-            if (!IsOverlappingOnAxis(this, other, axis))
-                return false;
+            return false;
         }
 
-        foreach (var axis in other._axes)
-        {
-            if (!IsOverlappingOnAxis(this, other, axis))
-                return false;
-        }
-
-        return true; // No separating axis found, must be intersecting
+        return other._axes.All(axis => IsOverlappingOnAxis(refThis, other, axis));
     }
 
     private static bool IsOverlappingOnAxis(RotatedRectangle rect1, RotatedRectangle rect2, Vector2 axis)
     {
-        ProjectOntoAxis(rect1._corners, axis, out float min1, out float max1);
-        ProjectOntoAxis(rect2._corners, axis, out float min2, out float max2);
+        ProjectOntoAxis(rect1._corners, axis, out var min1, out var max1);
+        ProjectOntoAxis(rect2._corners, axis, out var min2, out var max2);
 
         return !(max1 < min2 || max2 < min1);
     }
 
     private static void ProjectOntoAxis(Vector2[] corners, Vector2 axis, out float min, out float max)
     {
-        float dot = Vector2.Dot(corners[0], axis);
+        var dot = Vector2.Dot(corners[0], axis);
         min = max = dot;
 
-        for (int i = 1; i < 4; i++)
+        for (var i = 1; i < 4; i++)
         {
             dot = Vector2.Dot(corners[i], axis);
             if (dot < min) min = dot;
@@ -69,13 +67,13 @@ public struct RotatedRectangle
 
     private void UpdateCornersAndAxes()
     {
-        Vector2 halfSize = Size / 2f;
+        var halfSize = Size / 2f;
 
         // Local corner positions (centered at origin)
-        Vector2 topLeft = new Vector2(-halfSize.X, -halfSize.Y);
-        Vector2 topRight = new Vector2(halfSize.X, -halfSize.Y);
-        Vector2 bottomRight = new Vector2(halfSize.X, halfSize.Y);
-        Vector2 bottomLeft = new Vector2(-halfSize.X, halfSize.Y);
+        var topLeft = new Vector2(-halfSize.X, -halfSize.Y);
+        var topRight = new Vector2(halfSize.X, -halfSize.Y);
+        var bottomRight = new Vector2(halfSize.X, halfSize.Y);
+        var bottomLeft = new Vector2(-halfSize.X, halfSize.Y);
 
         // Rotate corners around origin and translate to position
         _corners[0] = RotatePoint(topLeft) + Position;
@@ -92,8 +90,8 @@ public struct RotatedRectangle
 
     private Vector2 RotatePoint(Vector2 point)
     {
-        float cos = (float)Math.Cos(Rotation);
-        float sin = (float)Math.Sin(Rotation);
+        var cos = (float)Math.Cos(Rotation);
+        var sin = (float)Math.Sin(Rotation);
         return new Vector2(
             point.X * cos - point.Y * sin,
             point.X * sin + point.Y * cos
@@ -110,20 +108,20 @@ public struct RotatedRectangle
 
     public static Vector2? GetIntersectPoint(RotatedRectangle r1, RotatedRectangle r2)
     {
-        Vector2[] corners1 = r1.GetCorners();
-        Vector2[] corners2 = r2.GetCorners();
+        var corners1 = r1.GetCorners();
+        var corners2 = r2.GetCorners();
 
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            Vector2 a1 = corners1[i];
-            Vector2 a2 = corners1[(i + 1) % 4];
+            var a1 = corners1[i];
+            var a2 = corners1[(i + 1) % 4];
 
-            for (int j = 0; j < 4; j++)
+            for (var j = 0; j < 4; j++)
             {
-                Vector2 b1 = corners2[j];
-                Vector2 b2 = corners2[(j + 1) % 4];
+                var b1 = corners2[j];
+                var b2 = corners2[(j + 1) % 4];
 
-                if (LineSegmentsIntersect(a1, a2, b1, b2, out Vector2 intersection))
+                if (LineSegmentsIntersect(a1, a2, b1, b2, out var intersection))
                     return intersection;
             }
         }
@@ -135,23 +133,20 @@ public struct RotatedRectangle
     {
         intersection = Vector2.Zero;
 
-        Vector2 r = p2 - p1;
-        Vector2 s = q2 - q1;
+        var r = p2 - p1;
+        var s = q2 - q1;
 
-        float denominator = Cross(r, s);
+        var denominator = Cross(r, s);
         if (denominator == 0)
             return false; // parallel
 
-        float t = Cross(q1 - p1, s) / denominator;
-        float u = Cross(q1 - p1, r) / denominator;
+        var t = Cross(q1 - p1, s) / denominator;
+        var u = Cross(q1 - p1, r) / denominator;
 
-        if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
-        {
-            intersection = p1 + t * r;
-            return true;
-        }
-
-        return false;
+        if (!(t >= 0) || !(t <= 1) || !(u >= 0) || !(u <= 1)) return false;
+        
+        intersection = p1 + t * r;
+        return true;
     }
 
     private static float Cross(Vector2 a, Vector2 b)
