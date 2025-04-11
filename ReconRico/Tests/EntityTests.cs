@@ -3,7 +3,7 @@ using ReconRico.Components;
 
 namespace ReconRico.Tests;
 
-public class TestComponent : IComponent
+file class TestComponent : IComponent
 {
     public bool WasDestroyed { get; private set; }
     public void Destroy() => WasDestroyed = true;
