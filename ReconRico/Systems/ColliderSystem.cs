@@ -18,7 +18,7 @@ public class ColliderSystem
                 var transform = e.GetComponent<TransformComponent>();
                 var collider = e.GetComponent<ColliderComponent>();
                 var rect = new RotatedRectangle(
-                    transform.Position,
+                    transform.Position + collider.Offset,
                     collider.Collider,
                     transform.Rotation
                 );
@@ -47,7 +47,11 @@ public class ColliderSystem
     {
         if (entity.Entity.TryGetComponent<ColliderResponse>(out var response))
         {
-            response.OnCollision(new CollisionEvent(entity.Entity.Id, other.Entity.Id, null));
+            response.OnCollision(new CollisionEvent(
+                entity.Entity.Id,
+                other.Entity.Id,
+                RotatedRectangle.GetIntersectPoint(entity.Rectangle, other.Rectangle)
+            ));
         }
     }
 }

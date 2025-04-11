@@ -7,6 +7,9 @@ namespace ReconRico.Systems;
 
 public class RenderSystem(SpriteBatch spriteBatch)
 {
+    private readonly Dictionary<(Point size, Color? fillColor, int border, Color? borderColor), Texture2D> _gizmoCache =
+        new();
+
     public void Render(GameTime gameTime)
     {
         spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -51,7 +54,8 @@ public class RenderSystem(SpriteBatch spriteBatch)
                 var collider = entity.GetComponent<ColliderComponent>();
                 var transform = entity.GetComponent<TransformComponent>();
 
-                DrawBorderedRectangle(transform.Position.ToPoint(), collider.Collider.ToPoint(), Color.Lime, 2,
+                DrawBorderedRectangle((transform.Position + collider.Offset).ToPoint(), collider.Collider.ToPoint(),
+                    Color.Lime, 2,
                     transform.Rotation);
             }
         }
@@ -62,6 +66,10 @@ public class RenderSystem(SpriteBatch spriteBatch)
     private Texture2D CreateRectangle(int width, int height, Color? fillColor = null, int border = 0,
         Color? borderColor = null)
     {
+        var cacheKey = (new Point(width, height), fillColor, border, borderColor);
+        if (_gizmoCache.TryGetValue(cacheKey, out var texture))
+            return texture;
+
         fillColor ??= Color.Transparent;
         borderColor ??= Color.Transparent;
 
@@ -79,6 +87,8 @@ public class RenderSystem(SpriteBatch spriteBatch)
         rect.SetData(colors
             .SelectMany(x => x)
             .ToArray());
+
+        _gizmoCache[cacheKey] = rect;
 
         return rect;
     }

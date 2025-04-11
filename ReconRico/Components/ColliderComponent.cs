@@ -6,6 +6,7 @@ public class ColliderComponent : IComponent
 {
     public ColliderShape Shape { get; set; }
     public Vector2 Collider { get; set; }
+    public Vector2 Offset { get; set; }
 }
 
 public enum ColliderShape

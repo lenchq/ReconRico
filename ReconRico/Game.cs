@@ -77,6 +77,7 @@ public class Game : Microsoft.Xna.Framework.Game
         entity1.RegisterComponent(new ColliderComponent()
         {
             Collider = new Vector2(32, 32),
+            Offset = new Vector2(32,32)
         });
         entity.RegisterComponent(new ColliderResponse
         {
