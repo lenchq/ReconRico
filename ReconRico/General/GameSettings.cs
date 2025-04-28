@@ -22,7 +22,11 @@ static class GameSettings
     public const float PLAYER_MOVE_VERTICAL_SPEED = 0.25f;
     public const float PLAYER_MOVE_HORIZONTAL_SPEED = 0.25f;
 
+    public const int GUN_SHOOT_DELAY_MS = 500;
+
     public const Keys CAMERA_CONTROL_FLY = Keys.LeftShift;
+
+    public const bool IS_MOUSE_VISIBLE = false;
 
     #endregion
 

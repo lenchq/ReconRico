@@ -7,9 +7,16 @@ namespace ReconRico.Systems;
 
 public class PlayerControlSystem
 {
-    public void Update(GameTime gameTime)
+    public void Update(Game game)
     {
-        var player = EntityManager.GetEntityWithComponent<PlayerComponent>();
+        if (!game.IsActive) return;
+        
+        var player = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
+            .FirstOrDefault();
+
+        // Player is probably dead =)
+        if (player is null)
+            return;
 
         var moveVelocity = Vector2.Zero;
 
@@ -33,21 +40,47 @@ public class PlayerControlSystem
         }
 
         var mouse = Mouse.GetState();
-        var mouseInBounds = mouse.X is > 0 and < GameSettings.WINDOW_WIDTH
-                            && mouse.Y is > 0 and < GameSettings.WINDOW_HEIGHT;
+        var cursor = EntityManager.GetEntitiesWithComponent<GameCursorComponent>()
+            .FirstOrDefault();
 
-        var transform = player.GetComponent<TransformComponent>();
-        if (mouseInBounds)
-        {
-            var fromPlayerToCursor = mouse.Position.ToVector2() - transform.Position;
-            var fromPlayerToCursorAngle =
-                (float)Math.Atan2(fromPlayerToCursor.Y, fromPlayerToCursor.X) + MathHelper.PiOver2;
+        if (cursor is not null)
+            RotateToGameCursor(cursor, player, ref moveVelocity);
 
-            transform.Rotation = fromPlayerToCursorAngle;
-        }
-        moveVelocity.Rotate(transform.Rotation);
+        // if (mouse.LeftButton == ButtonState.Pressed)
+        // {
+        //     // Shoot(gameTime);
+        // }
+        var gun = player.GetComponent<GunComponent>();
+        gun.ShootRequested = mouse.LeftButton == ButtonState.Pressed;
 
         var playerVelocity = player.GetComponent<VelocityComponent>();
         playerVelocity.Velocity += moveVelocity;
+    }
+
+    private void Shoot(GameTime gameTime)
+    {
+        // var gun = 
+        // EntityDirector.CreateBullet(new Vector2(100, 100), MathHelper.PiOver2, Vector2.UnitX * 20);
+    }
+
+    private void RotateToGameCursor(Entity cursor, Entity player, ref Vector2 moveVelocity)
+    {
+        var cursorPos = cursor.GetComponent<TransformComponent>();
+        var playerPos = player.GetComponent<TransformComponent>();
+
+        var fromPlayerToCursor = cursorPos.Position - playerPos.Position;
+        var fromPlayerToCursorAngle =
+            (float)Math.Atan2(fromPlayerToCursor.Y, fromPlayerToCursor.X) + MathHelper.PiOver2;
+
+        playerPos.Rotation = fromPlayerToCursorAngle;
+
+        moveVelocity.Rotate(playerPos.Rotation);
+    }
+
+
+    public static bool IsMouseInBounds(MouseState mouse)
+    {
+        return mouse.X is > 0 and < GameSettings.WINDOW_WIDTH
+               && mouse.Y is > 0 and < GameSettings.WINDOW_HEIGHT;
     }
 }

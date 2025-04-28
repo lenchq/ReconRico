@@ -12,8 +12,9 @@ public static class EntityManager
 
     public static Entity CreateEntity()
     {
-        var entity = new Entity(_nextEntityId++);
+        var entity = new Entity(_nextEntityId);
         Entities.Add(_nextEntityId, entity);
+        _nextEntityId += 1;
         return entity;
     }
 
@@ -39,12 +40,6 @@ public static class EntityManager
         Entities.Remove(entityId);
     }
 
-    public static Entity GetEntityWithComponent<T>() where T : IComponent
-    {
-        return Entities.Values
-            .First(entity =>
-                entity.HasComponent<T>());
-    }
     public static IEnumerable<Entity> GetEntitiesWithComponent<T>() where T : IComponent
     {
         return Entities.Values

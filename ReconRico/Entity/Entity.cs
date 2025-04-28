@@ -51,7 +51,10 @@ public class Entity(long id)
     public virtual void Destroy()
     {
         foreach (var component in _components.Values)
+        {
             component.Destroy();
+            _components.Remove(component.GetType());
+        }
         Console.WriteLine($"[E_{Id}]: Entity destroyed");
     }
 }

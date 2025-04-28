@@ -13,6 +13,17 @@ public struct RotatedRectangle
 
     private readonly Vector2[] _corners;
     private readonly Vector2[] _axes;
+    
+    // These properties now account for rotation by using the actual corners
+    public float Left => Math.Min(Math.Min(TopLeft.X, TopRight.X), Math.Min(BottomLeft.X, BottomRight.X));
+    public float Right => Math.Max(Math.Max(TopLeft.X, TopRight.X), Math.Max(BottomLeft.X, BottomRight.X));
+    public float Top => Math.Min(Math.Min(TopLeft.Y, TopRight.Y), Math.Min(BottomLeft.Y, BottomRight.Y));
+    public float Bottom => Math.Max(Math.Max(TopLeft.Y, TopRight.Y), Math.Max(BottomLeft.Y, BottomRight.Y));
+    
+    public Vector2 TopLeft => _corners[0];
+    public Vector2 TopRight => _corners[1];
+    public Vector2 BottomRight => _corners[2];
+    public Vector2 BottomLeft => _corners[3];
 
     public RotatedRectangle(Vector2 position, Vector2 size, float rotation = 0f)
     {

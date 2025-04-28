@@ -9,6 +9,11 @@ public class EntityBuilder
 {
     private Entity _entity;
 
+    public EntityBuilder()
+    {
+        Reset();
+    }
+
     public EntityBuilder WithTransform(Vector2? position = null, float rotation = 0f,
         Vector2? scale = null, int layer = 0)
     {
@@ -49,6 +54,24 @@ public class EntityBuilder
         {
             Collider = collider,
             Shape = ColliderShape.Rectangle,
+        });
+        return this;
+    }
+
+    public EntityBuilder WithColliderResponse(Action<CollisionEvent> onCollision)
+    {
+        _entity.RegisterComponent(new ColliderResponse()
+        {
+            OnCollision = onCollision,
+        });
+        return this;
+    }
+
+    public EntityBuilder WithScript(Action<Entity, GameTime> onUpdate)
+    {
+        _entity.RegisterComponent(new ScriptComponent
+        {
+            OnUpdate = onUpdate,
         });
         return this;
     }
