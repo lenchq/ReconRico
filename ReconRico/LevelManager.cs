@@ -43,44 +43,50 @@ public static class LevelManager
                 continue;
             }
 
+            Entity? createdEntity = null;
             switch (entity.Type)
             {
                 case "player":
-                    EntityDirector.CreatePlayer(position, rotation);
+                    createdEntity = EntityDirector.CreatePlayer(position, rotation);
                     hasPlayer = true;
                     break;
 
                 case "bullet":
                     Vector2 velocity = new(entity.Velocity[0], entity.Velocity[1]);
-                    EntityDirector.CreateBullet(position, rotation, velocity);
+                    createdEntity = EntityDirector.CreateBullet(position, rotation, velocity);
                     break;
 
                 case "solid_wall":
                     Vector2 size1 = new(entity.Size[0], entity.Size[1]);
-                    EntityDirector.CreateSolidWallObstacle(position, size1, rotation);
+                    createdEntity = EntityDirector.CreateSolidWallObstacle(position, size1, rotation);
                     break;
 
                 case "breakable_wall":
                     Vector2 size2 = new(entity.Size[0], entity.Size[1]);
-                    EntityDirector.CreateBreakableWallObstacle(position, size2, rotation);
+                    createdEntity = EntityDirector.CreateBreakableWallObstacle(position, size2, rotation);
                     break;
 
                 case "reflector_wall":
                     Vector2 size3 = new(entity.Size[0], entity.Size[1]);
-                    EntityDirector.CreateReflectorWallObstacle(position, size3, rotation);
+                    createdEntity = EntityDirector.CreateReflectorWallObstacle(position, size3, rotation);
                     break;
 
                 case "reflector_breakable_wall":
                     Vector2 size4 = new(entity.Size[0], entity.Size[1]);
-                    EntityDirector.CreateReflectorBreakableWallObstacle(position, size4, rotation);
+                    createdEntity =
+                        EntityDirector.CreateReflectorBreakableWallObstacle(position, size4, rotation);
                     break;
 
                 default:
                     Console.WriteLine($"Unknown entity type: {entity.Type}");
                     break;
             }
+
+            if (createdEntity is not null)
+                EntityManager.AddEntity(createdEntity);
         }
 
+        EntityManager.AddEntity(EntityDirector.CreateCursor());
         if (!hasPlayer)
         {
             throw new InvalidDataException("Level must contain a player.");

@@ -13,7 +13,6 @@ public static class EntityManager
     public static Entity CreateEntity()
     {
         var entity = new Entity(_nextEntityId);
-        Entities.Add(_nextEntityId, entity);
         _nextEntityId += 1;
         return entity;
     }

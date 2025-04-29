@@ -24,8 +24,9 @@ public class GunSystem
             }
 
             Console.WriteLine("shoot");
-            EntityDirector.CreateBullet(entPos.Position,
+            var bullet = EntityDirector.CreateBullet(entPos.Position,
                 entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * 6, entPos.Rotation));
+            EntityManager.AddEntity(bullet);
             gun.Ammo -= 1;
             gun.LastShoot = gameTime.TotalGameTime.TotalMilliseconds;
             gun.ShootRequested = false;

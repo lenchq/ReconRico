@@ -99,6 +99,12 @@ public class EntityBuilder
         return this;
     }
 
+    public EntityBuilder WithComponent(IComponent component)
+    {
+        _entity.RegisterComponent(component);
+        return this;
+    }
+
     public void Reset()
     {
         _entity = EntityManager.CreateEntity();

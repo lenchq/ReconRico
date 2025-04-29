@@ -1,12 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReconRico.Components;
+using ReconRico.General;
 
 namespace ReconRico;
 
 public static class EntityDirector
 {
     private static readonly EntityBuilder Builder = new();
+
+    public static Entity CreateCursor()
+    {
+        return Builder
+            .WithTransform(new Vector2(GameSettings.WINDOW_WIDTH / 2f, GameSettings.WINDOW_HEIGHT / 2f), 0,
+                Vector2.One)
+            .WithSprite(AssetsManager.Cursor)
+            .WithComponent(new GameCursorComponent())
+            .Build();
+    }
 
     public static Entity CreateBullet(Vector2 position, float rotation, Vector2 velocity)
     {
@@ -42,10 +53,15 @@ public static class EntityDirector
     {
         return Builder
             .WithTransform(position, rotation, Vector2.One)
+            .WithVelocity()
             .WithCollider(new Vector2(2f, 2f))
-            .WithSprite(AssetsManager.Ball, SpriteEffects.None)
+            .WithSprite(AssetsManager.Ball)
             .WithRigidbody()
             .WithPlayer()
+            .WithComponent(new GunComponent(20, 100, 5)
+            {
+                Ammo = 9099
+            })
             .Build();
     }
 

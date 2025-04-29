@@ -63,7 +63,7 @@ public class Game : Microsoft.Xna.Framework.Game
         }
         catch (Exception ex)
         {
-            Debug.WriteLine("Failed to load level: " + ex.Message);
+            Console.WriteLine("Failed to load level: " + ex.Message);
         }
     }
 
