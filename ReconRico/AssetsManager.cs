@@ -9,6 +9,8 @@ public static class AssetsManager
     public static Texture2D Ball { get; private set; }
     public static Texture2D Bullet { get; private set; }
 
+    public static SpriteFont DefaultFont { get; private set; }
+
 
     public static void Initialize(ContentManager content)
     {

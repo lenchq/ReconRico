@@ -21,6 +21,9 @@ public class Game : Microsoft.Xna.Framework.Game
     private GunSystem _gunSystem;
     private ScriptSystem _scriptSystem;
 
+    private GameState _gameState = GameState.Playing;
+    private KeyboardState _previousKeyboardState;
+
     public Game()
     {
         var graphics = new GraphicsDeviceManager(this);
@@ -43,6 +46,8 @@ public class Game : Microsoft.Xna.Framework.Game
         _gunSystem = new GunSystem();
         _scriptSystem = new ScriptSystem();
 
+        _previousKeyboardState = Keyboard.GetState();
+        
         SDL_SetWindowGrab(this.Window.Handle, true);
 
         base.Initialize();
@@ -73,13 +78,24 @@ public class Game : Microsoft.Xna.Framework.Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        _playerControlSystem.Update(this);
-        _movementSystem.Update(gameTime);
-        _colliderSystem.Update(gameTime);
-        _rigidbodySystem.Update(gameTime);
-        _gameCursorSystem.Update(this);
-        _gunSystem.Update(gameTime);
-        _scriptSystem.Update(gameTime);
+        KeyboardState state = Keyboard.GetState();
+        if (state.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P))
+        {
+            _gameState = _gameState == GameState.Playing ? GameState.Paused : GameState.Playing;
+        }
+
+        _previousKeyboardState = state;
+
+        if (_gameState == GameState.Playing)
+        {
+            _playerControlSystem.Update(this);
+            _movementSystem.Update(gameTime);
+            _colliderSystem.Update(gameTime);
+            _rigidbodySystem.Update(gameTime);
+            _gameCursorSystem.Update(this);
+            _gunSystem.Update(gameTime);
+            _scriptSystem.Update(gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -89,6 +105,23 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.White);
 
         _renderSystem.Render(gameTime);
+
+        if (_gameState == GameState.Paused)
+        {
+            _spriteBatch.Begin();
+
+            var font = AssetsManager.DefaultFont;
+            string pauseText = "Paused\nPress P to Resume";
+            Vector2 textSize = font.MeasureString(pauseText);
+            Vector2 position = new Vector2(
+                (GameSettings.WINDOW_WIDTH - textSize.X) / 2,
+                (GameSettings.WINDOW_HEIGHT - textSize.Y) / 2
+            );
+
+            _spriteBatch.DrawString(font, pauseText, position, Color.Black);
+
+            _spriteBatch.End();
+        }
 
         base.Draw(gameTime);
     }
