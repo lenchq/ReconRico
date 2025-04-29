@@ -5,7 +5,7 @@ public struct RotatedRectangle
 {
     public Vector2 Position;
     public Vector2 Size;
-    
+
     /// <summary>
     /// Rotation in radians
     /// </summary>
@@ -13,13 +13,13 @@ public struct RotatedRectangle
 
     private readonly Vector2[] _corners;
     private readonly Vector2[] _axes;
-    
+
     // These properties now account for rotation by using the actual corners
     public float Left => Math.Min(Math.Min(TopLeft.X, TopRight.X), Math.Min(BottomLeft.X, BottomRight.X));
     public float Right => Math.Max(Math.Max(TopLeft.X, TopRight.X), Math.Max(BottomLeft.X, BottomRight.X));
     public float Top => Math.Min(Math.Min(TopLeft.Y, TopRight.Y), Math.Min(BottomLeft.Y, BottomRight.Y));
     public float Bottom => Math.Max(Math.Max(TopLeft.Y, TopRight.Y), Math.Max(BottomLeft.Y, BottomRight.Y));
-    
+
     public Vector2 TopLeft => _corners[0];
     public Vector2 TopRight => _corners[1];
     public Vector2 BottomRight => _corners[2];
@@ -47,12 +47,8 @@ public struct RotatedRectangle
     {
         var refThis = this;
         // Check all axes of both rectangles
-        if (_axes.Any(axis => !IsOverlappingOnAxis(refThis, other, axis)))
-        {
-            return false;
-        }
-
-        return other._axes.All(axis => IsOverlappingOnAxis(refThis, other, axis));
+        return _axes.All(axis => IsOverlappingOnAxis(refThis, other, axis)) &&
+               other._axes.All(axis => IsOverlappingOnAxis(refThis, other, axis));
     }
 
     private static bool IsOverlappingOnAxis(RotatedRectangle rect1, RotatedRectangle rect2, Vector2 axis)
@@ -114,7 +110,7 @@ public struct RotatedRectangle
     {
         return (Vector2[])_corners.Clone();
     }
-    
+
     public Vector2? GetIntersectPoint(RotatedRectangle other) => GetIntersectPoint(this, other);
 
     public static Vector2? GetIntersectPoint(RotatedRectangle r1, RotatedRectangle r2)
@@ -140,7 +136,7 @@ public struct RotatedRectangle
         return null;
     }
 
-    private static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2, out Vector2 intersection)
+    public static bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2, out Vector2 intersection)
     {
         intersection = Vector2.Zero;
 
@@ -155,7 +151,7 @@ public struct RotatedRectangle
         var u = Cross(q1 - p1, r) / denominator;
 
         if (!(t >= 0) || !(t <= 1) || !(u >= 0) || !(u <= 1)) return false;
-        
+
         intersection = p1 + t * r;
         return true;
     }
