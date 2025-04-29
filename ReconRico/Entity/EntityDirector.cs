@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReconRico.Components;
 
 namespace ReconRico;
@@ -35,5 +36,56 @@ public static class EntityDirector
                     vel.Velocity += vel.Velocity * 0.3f;
             })
             .Build();
+    }
+
+    public static Entity CreatePlayer(Vector2 position, float rotation)
+    {
+        return Builder
+            .WithTransform(position, rotation, Vector2.One)
+            .WithCollider(new Vector2(2f, 2f))
+            .WithSprite(AssetsManager.Ball, SpriteEffects.None)
+            .WithRigidbody()
+            .WithPlayer()
+            .Build();
+    }
+
+    public static Entity CreateSolidWallObstacle(Vector2 position, Vector2 size, float rotation)
+    {
+        return CreateBaseWall(position, size, rotation)
+            .WithSprite(AssetsManager.Ball)
+            .WithObstacle(BulletCollisionType.Absorb, false)
+            .Build();
+    }
+
+    public static Entity CreateBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
+    {
+        return CreateBaseWall(position, size, rotation)
+            .WithSprite(AssetsManager.Ball)
+            .WithObstacle(BulletCollisionType.Absorb, true)
+            .Build();
+    }
+
+    public static Entity CreateReflectorWallObstacle(Vector2 position, Vector2 size, float rotation)
+    {
+        return CreateBaseWall(position, size, rotation)
+            .WithSprite(AssetsManager.Ball)
+            .WithObstacle(BulletCollisionType.Reflect, false)
+            .Build();
+    }
+
+    public static Entity CreateReflectorBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
+    {
+        return CreateBaseWall(position, size, rotation)
+            .WithSprite(AssetsManager.Ball)
+            .WithObstacle(BulletCollisionType.Reflect, true)
+            .Build();
+    }
+
+    private static EntityBuilder CreateBaseWall(Vector2 position, Vector2 size, float rotation)
+    {
+        return Builder
+            .WithTransform(position, rotation, Vector2.One)
+            .WithCollider(size)
+            .WithRigidbody();
     }
 }

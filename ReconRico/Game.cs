@@ -27,7 +27,7 @@ public class Game : Microsoft.Xna.Framework.Game
         graphics.PreferredBackBufferWidth = GameSettings.WINDOW_WIDTH;
         graphics.PreferredBackBufferHeight = GameSettings.WINDOW_HEIGHT;
         graphics.ApplyChanges();
-        
+
         Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
         Content.RootDirectory = "Content";
         IsMouseVisible = GameSettings.IS_MOUSE_VISIBLE;
@@ -55,67 +55,16 @@ public class Game : Microsoft.Xna.Framework.Game
 
         AssetsManager.Initialize(Content);
 
-        var player = EntityManager.CreateEntity();
-        player.RegisterComponent(new TransformComponent
-        {
-            Position = new Vector2(860, 720 / 2f),
-        });
-        player.RegisterComponent(new VelocityComponent
-        {
-            Velocity = new Vector2(1f, 0)
-        });
-        player.RegisterComponent(new SpriteComponent
-        {
-            Texture = AssetsManager.Ball,
-        });
-        player.RegisterComponent(new ColliderComponent()
-        {
-            Collider = new Vector2(32, 16),
-        });
-        player.RegisterComponent(new PlayerComponent());
-        player.RegisterComponent(new RigidbodyComponent());
-        player.RegisterComponent(new GunComponent(20, 100, 5)
-        {
-            Ammo = 9099
-        });
+        EntityManager.ClearEntities();
 
-        var wall = EntityManager.CreateEntity();
-        wall.RegisterComponent(new TransformComponent
+        try
         {
-            Position = new Vector2(0, 720 / 2f),
-        });
-        wall.RegisterComponent(new SpriteComponent
+            LevelManager.LoadLevel("level1");
+        }
+        catch (Exception ex)
         {
-            Texture = AssetsManager.Ball,
-        });
-        wall.RegisterComponent(new ColliderComponent()
-        {
-            Collider = new Vector2(50, 720),
-        });
-        wall.RegisterComponent(new RigidbodyComponent());
-
-        var wall2 = EntityManager.CreateEntity();
-        wall2.RegisterComponent(new TransformComponent
-        {
-            Position = new Vector2(600, 600),
-        });
-        wall2.RegisterComponent(new SpriteComponent
-        {
-            Texture = AssetsManager.Ball,
-        });
-        wall2.RegisterComponent(new ColliderComponent()
-        {
-            Collider = new Vector2(20, 600),
-        });
-        wall2.RegisterComponent(new RigidbodyComponent());
-
-        var cursor = EntityManager.CreateEntity();
-        cursor.RegisterComponent(new TransformComponent() { Position = new Vector2(300, 300) });
-        cursor.RegisterComponent(new SpriteComponent()
-        {
-            Texture = AssetsManager.Cursor
-        });
-        cursor.RegisterComponent(new GameCursorComponent());
+            Debug.WriteLine("Failed to load level: " + ex.Message);
+        }
     }
 
     protected override void Update(GameTime gameTime)

@@ -1,0 +1,19 @@
+entities:
+  - type: player
+    position: [ 150, 150 ]
+    rotation: 0
+
+  - type: breakable_wall
+    position: [ 300, 150 ]
+    size: [ 64, 64 ]
+    rotation: 0
+
+  - type: bullet
+    position: [ 200, 150 ]
+    rotation: 0
+    velocity: [ 5, 0 ]
+
+  - type: solid_wall
+    position: [ 400, 150 ]
+    size: [ 64, 64 ]
+    rotation: 0

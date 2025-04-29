@@ -76,6 +76,23 @@ public class EntityBuilder
         return this;
     }
 
+    public EntityBuilder WithRigidbody()
+    {
+        _entity.RegisterComponent(new RigidbodyComponent());
+        return this;
+    }
+
+    public EntityBuilder WithObstacle(BulletCollisionType bulletCollisionType, bool breakable)
+    {
+        _entity.RegisterComponent(new ObstacleComponent
+        {
+            BulletCollisionType = bulletCollisionType,
+            IsBreakable = breakable,
+        });
+        return this;
+    }
+
+
     public EntityBuilder WithPlayer()
     {
         _entity.RegisterComponent(new PlayerComponent());

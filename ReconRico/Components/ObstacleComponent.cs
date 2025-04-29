@@ -1,15 +1,15 @@
 ﻿namespace ReconRico.Components;
 
-public class ObstacleComponent
+public class ObstacleComponent : IComponent
 {
-    public CollisionType CollisionType { get; set; }
+    public BulletCollisionType BulletCollisionType { get; set; }
     /// <summary>
     /// Breakable obstacle, destroys after collision event.
     /// </summary>
     public bool IsBreakable { get; set; } = false;
 }
 
-public enum CollisionType
+public enum BulletCollisionType
 {
     /// <summary>
     /// Reflectable obstacle, allow bullets to ricochet.

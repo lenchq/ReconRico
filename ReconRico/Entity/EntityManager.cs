@@ -63,4 +63,9 @@ public static class EntityManager
                 )
             );
     }
+
+    public static void ClearEntities()
+    {
+        Entities.Clear();
+    }
 }

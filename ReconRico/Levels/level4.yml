@@ -1,0 +1,24 @@
+entities:
+  - type: player
+    position: [ 100, 600 ]
+    rotation: 0
+
+  - type: reflector_wall
+    position: [ 200, 500 ]
+    size: [ 128, 32 ]
+    rotation: 12
+
+  - type: reflector_wall
+    position: [ 400, 400 ]
+    size: [ 128, 32 ]
+    rotation: -18
+
+  - type: reflector_wall
+    position: [ 600, 300 ]
+    size: [ 128, 32 ]
+    rotation: -18
+
+  - type: bullet
+    position: [ 150, 580 ]
+    rotation: 30
+    velocity: [ 2, -3 ]

@@ -30,6 +30,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105"/>
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0"/>
+    <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High"/>
