@@ -25,11 +25,46 @@ public class GunSystem
 
             Console.WriteLine("shoot");
             var bullet = EntityDirector.CreateBullet(entPos.Position,
-                entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * 4.5f, entPos.Rotation));
+                entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * 800f, entPos.Rotation));
             EntityManager.AddEntity(bullet);
             gun.Ammo -= 1;
             gun.LastShoot = gameTime.TotalGameTime.TotalMilliseconds;
             gun.ShootRequested = false;
         }
     }
+    
+    public static Vector2 GetWallReflectedVelocity(Vector2 velocity, ColliderComponent bulletCollider,
+        TransformComponent bulletPos, ColliderComponent targetCollider, TransformComponent targetPos,
+        VelocityComponent bulletVel)
+    {
+        var bulletRect = bulletCollider.GetColliderRectangle(bulletPos);
+        var targetRect = targetCollider.GetColliderRectangle(targetPos);
+                
+        float penetrationX = Math.Min(
+            bulletRect.Right - targetRect.Left,
+            targetRect.Right - bulletRect.Left
+        );
+        float penetrationY = Math.Min(
+            bulletRect.Bottom - targetRect.Top,
+            targetRect.Bottom - bulletRect.Top
+        );
+                
+        Vector2 wallNormal;
+        if (penetrationX < penetrationY)
+            // X collision
+            wallNormal = new Vector2(
+                bulletPos.Position.X < targetPos.Position.X ? -1 : 1,
+                0
+            );
+        else
+            // Y collision
+            wallNormal = new Vector2(
+                0,
+                bulletPos.Position.Y < targetPos.Position.Y ? -1 : 1
+            );
+        var reflectedVelocity = Vector2.Reflect(bulletVel.Velocity, wallNormal);
+        reflectedVelocity = Vector2.Normalize(reflectedVelocity) * velocity.Length();
+        return reflectedVelocity;
+    }
+
 }

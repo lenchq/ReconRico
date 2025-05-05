@@ -46,21 +46,11 @@ public class PlayerControlSystem
         if (cursor is not null)
             RotateToGameCursor(cursor, player, ref moveVelocity);
 
-        // if (mouse.LeftButton == ButtonState.Pressed)
-        // {
-        //     // Shoot(gameTime);
-        // }
         var gun = player.GetComponent<GunComponent>();
         gun.ShootRequested = mouse.LeftButton == ButtonState.Pressed;
 
         var playerVelocity = player.GetComponent<VelocityComponent>();
         playerVelocity.Velocity += moveVelocity;
-    }
-
-    private void Shoot(GameTime gameTime)
-    {
-        // var gun = 
-        // EntityDirector.CreateBullet(new Vector2(100, 100), MathHelper.PiOver2, Vector2.UnitX * 20);
     }
 
     private void RotateToGameCursor(Entity cursor, Entity player, ref Vector2 moveVelocity)

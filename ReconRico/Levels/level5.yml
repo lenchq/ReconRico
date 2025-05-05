@@ -3,22 +3,26 @@ entities:
     position: [ 100, 360 ]
     rotation: 0
 
-  - type: solid_wall
+  - type: reflector_wall
     position: [ 200, 300 ]
     size: [ 64, 64 ]
     rotation: 0
 
-  - type: solid_wall
+  - type: reflector_wall
     position: [ 200, 420 ]
     size: [ 64, 64 ]
     rotation: 0
 
-  - type: breakable_wall
+  - type: reflector_wall
     position: [ 260, 360 ]
     size: [ 64, 64 ]
     rotation: 0
+  - type: reflector_wall
+    position: [ 400, 400 ]
+    size: [ 300, 500 ]
+    rotation: 120
 
   - type: bullet
-    position: [ 500, 360 ]
+    position: [ 0, 360 ]
     rotation: 180
-    velocity: [ -6, 0 ]
+    velocity: [ -800, 0 ]

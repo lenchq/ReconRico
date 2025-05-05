@@ -11,13 +11,10 @@ public class RigidbodySystem
         foreach (var moving in EntityManager.GetEntitiesWithAll(typeof(RigidbodyComponent),
                      typeof(TransformComponent), typeof(ColliderComponent), typeof(VelocityComponent)))
         {
-            var rb = moving.GetComponent<RigidbodyComponent>();
             var tf = moving.GetComponent<TransformComponent>();
             var col = moving.GetComponent<ColliderComponent>();
             var vel = moving.GetComponent<VelocityComponent>();
 
-            // Store original position for potential rollback
-            var originalPos = tf.Position;
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Calculate the movement for this frame
@@ -30,18 +27,23 @@ public class RigidbodySystem
                 tf.Position.X += movement.X;
 
                 // Create bounds for the entity after X movement
-                var xMovedBounds = new RotatedRectangle(tf.Position + col.Offset, col.Collider, tf.Rotation);
+                var xMovedBounds = new Rectangle(
+                    (int)(tf.Position.X + col.Offset.X - col.Collider.X / 2),
+                    (int)(tf.Position.Y + col.Offset.Y - col.Collider.Y / 2),
+                    (int)col.Collider.X,
+                    (int)col.Collider.Y
+                );
 
                 // Check for collisions after X movement
                 CheckIntersection(moving, xMovedBounds, otherBounds =>
                 {
                     // Resolve X axis collision based on direction of movement
                     if (movement.X > 0) // moving right
-                        //     // Place entity to the left of the collided object with a small gap
-                        tf.Position.X = otherBounds.BottomLeft.X - col.Collider.X / 2 - col.Offset.X - 0.1f;
+                        // Place entity to the left of the collided object with a small gap
+                        tf.Position.X = otherBounds.Left - col.Collider.X / 2 - col.Offset.X - 0.1f;
                     else // moving left
-                        //     // Place entity to the right of the collided object with a small gap
-                        tf.Position.X = otherBounds.BottomRight.X + col.Collider.X / 2 - col.Offset.X + 0.1f;
+                        // Place entity to the right of the collided object with a small gap
+                        tf.Position.X = otherBounds.Right + col.Collider.X / 2 - col.Offset.X + 0.1f;
 
                     // Stop X velocity
                     vel.Velocity = new Vector2(0, vel.Velocity.Y);
@@ -55,19 +57,23 @@ public class RigidbodySystem
                 tf.Position.Y += movement.Y;
 
                 // Create bounds for the entity after Y movement
-                var yMovedBounds = new RotatedRectangle(tf.Position + col.Offset, col.Collider, tf.Rotation);
+                var yMovedBounds = new Rectangle(
+                    (int)(tf.Position.X + col.Offset.X - col.Collider.X / 2),
+                    (int)(tf.Position.Y + col.Offset.Y - col.Collider.Y / 2),
+                    (int)col.Collider.X,
+                    (int)col.Collider.Y
+                );
 
                 // Check for collisions after Y movement
                 CheckIntersection(moving, yMovedBounds, otherBounds =>
                 {
-                    // tf.Position.Y = otherBounds.TopLeft.Y - col.Collider.Y / 2 - col.Offset.Y - 0.01f;
                     // Resolve Y axis collision based on direction of movement
-                    // if (movement.Y > 0) // moving down
-                    //     //     // Place entity above the collided object with a small gap
-                    //     tf.Position.Y = otherBounds.BottomLeft.Y - col.Collider.Y / 2 - col.Offset.Y - 0.1f;
-                    // else // moving up
-                    //     //     // Place entity below the collided object with a small gap
-                    //     tf.Position.Y = otherBounds.BottomLeft.Y + col.Collider.Y / 2 + col.Offset.Y + 0.1f;
+                    if (movement.Y > 0) // moving down
+                        // Place entity above the collided object with a small gap
+                        tf.Position.Y = otherBounds.Top - col.Collider.Y / 2 - col.Offset.Y - 0.1f;
+                    else // moving up
+                        // Place entity below the collided object with a small gap
+                        tf.Position.Y = otherBounds.Bottom + col.Collider.Y / 2 - col.Offset.Y + 0.1f;
 
                     // Stop Y velocity
                     vel.Velocity = new Vector2(vel.Velocity.X, 0);
@@ -76,8 +82,8 @@ public class RigidbodySystem
         }
     }
 
-    public static void CheckIntersection(Entity moving, RotatedRectangle bounds,
-        Action<RotatedRectangle> onIntersection)
+    public static void CheckIntersection(Entity moving, Rectangle bounds,
+        Action<Rectangle> onIntersection)
     {
         foreach (var other in EntityManager.GetEntitiesWithAll(typeof(TransformComponent),
                      typeof(ColliderComponent), typeof(RigidbodyComponent)))
@@ -87,7 +93,12 @@ public class RigidbodySystem
             var oTf = other.GetComponent<TransformComponent>();
             var oCol = other.GetComponent<ColliderComponent>();
 
-            var otherBounds = new RotatedRectangle(oTf.Position + oCol.Offset, oCol.Collider, oTf.Rotation);
+            var otherBounds = new Rectangle(
+                (int)(oTf.Position.X + oCol.Offset.X - oCol.Collider.X / 2),
+                (int)(oTf.Position.Y + oCol.Offset.Y - oCol.Collider.Y / 2),
+                (int)oCol.Collider.X,
+                (int)oCol.Collider.Y
+            );
 
             if (!bounds.Intersects(otherBounds)) continue;
 

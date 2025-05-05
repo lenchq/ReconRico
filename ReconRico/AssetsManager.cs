@@ -17,5 +17,7 @@ public static class AssetsManager
         Ball = content.Load<Texture2D>("sprites/ball");
         Cursor = content.Load<Texture2D>("sprites/cursor");
         Bullet = content.Load<Texture2D>("sprites/bullet");
+        
+        DefaultFont = content.Load<SpriteFont>("Arial");
     }
 }

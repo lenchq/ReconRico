@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReconRico.Components;
 using ReconRico.General;
+using ReconRico.Systems;
 
 namespace ReconRico;
 
@@ -25,27 +26,54 @@ public static class EntityDirector
             .WithTransform(position, rotation, new Vector2(0.5f, 0.5f))
             .WithVelocity(velocity)
             .WithSprite(AssetsManager.Bullet)
-            .WithCollider(new Vector2(6f, 24f))
+            .WithCollider(new Vector2(6f, 6f))
             .WithColliderResponse(e =>
             {
-                Console.WriteLine("{0} collision with {1}", e.SourceId, e.TargetId);
                 var bullet = EntityManager.Entities[e.SourceId];
                 var target = EntityManager.Entities[e.TargetId];
+
+                // Skip collision with player
                 if (target.HasComponent<PlayerComponent>()) return;
-                var pos = bullet.GetComponent<TransformComponent>();
-                var vel = bullet.GetComponent<VelocityComponent>();
-                // var ricochetAngle = (float)Math.Atan2(velocity.Y, velocity.X);
-                pos.Rotation -= MathHelper.PiOver2;
-                vel.Velocity = Vector2.Rotate(vel.Velocity, MathHelper.PiOver2);
+
+                var bulletPos = bullet.GetComponent<TransformComponent>();
+                var bulletVel = bullet.GetComponent<VelocityComponent>();
+                var bulletCollider = bullet.GetComponent<ColliderComponent>();
+
+                var targetPos = target.GetComponent<TransformComponent>();
+                var targetCollider = target.GetComponent<ColliderComponent>();
+
+                if (!target.TryGetComponent<ObstacleComponent>(out var obstacle)) return;
+
+                if (obstacle.BulletCollisionType == BulletCollisionType.Reflect)
+                {
+                    var reflectedVelocity = GunSystem.GetWallReflectedVelocity(velocity, bulletCollider, bulletPos,
+                        targetCollider, targetPos, bulletVel);
+
+                    bulletVel.Velocity = reflectedVelocity;
+                    bulletPos.Rotation =
+                        (float)Math.Atan2(reflectedVelocity.Y, reflectedVelocity.X) + MathHelper.PiOver2;
+                }
+                else
+                {
+                    bullet.Destroy();
+                }
+
+
+                // Check if target is breakable
+                if (obstacle.IsBreakable)
+                {
+                    target.Destroy();
+                }
             })
             .WithScript((entity, gt) =>
             {
-                var vel = entity.GetComponent<VelocityComponent>();
-                if (vel.Velocity.LengthSquared() < 0.1f)
+                var pos = entity.GetComponent<TransformComponent>();
+                if (Math.Abs(pos.Position.X) > 2000f || Math.Abs(pos.Position.Y) > 2000f)
+                {
                     entity.Destroy();
-                else
-                    vel.Velocity += vel.Velocity * 0.3f;
+                }
             })
+            .WithComponent(new ProjectileComponent())
             .Build();
     }
 
@@ -54,7 +82,7 @@ public static class EntityDirector
         return Builder
             .WithTransform(position, rotation, Vector2.One)
             .WithVelocity()
-            .WithCollider(new Vector2(2f, 2f))
+            .WithCollider(new Vector2(32f, 16f))
             .WithSprite(AssetsManager.Ball)
             .WithRigidbody()
             .WithPlayer()

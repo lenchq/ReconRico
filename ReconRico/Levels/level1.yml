@@ -2,15 +2,19 @@ entities:
   - type: player
     position: [ 100, 100 ]
     rotation: 0
-  - type: bullet
-    position: [ 200, 300 ]
-    rotation: 60
-    velocity: [ 0, -5 ]
   - type: solid_wall
-    position: [ 300, 300 ]
-    size: [ 64, 64 ]
+    position: [ 0, 0 ]
+    size: [ 300, 100 ]
     rotation: 0
   - type: reflector_wall
     position: [ 500, 400 ]
     size: [ 128, 32 ]
     rotation: 0
+  - type: breakable_wall
+    position: [ 700, 600 ]
+    size: [ 128, 32 ]
+    rotation: 0
+  - type: reflector_breakable_wall
+    position: [ 300, 300 ]
+    size: [ 128, 32 ]
+    rotation: 0 

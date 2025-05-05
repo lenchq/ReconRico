@@ -64,7 +64,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         try
         {
-            LevelManager.LoadLevel("level1");
+            LevelManager.LoadLevel("level5");
         }
         catch (Exception ex)
         {
