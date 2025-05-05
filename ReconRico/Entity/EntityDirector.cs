@@ -86,7 +86,7 @@ public static class EntityDirector
             .WithSprite(AssetsManager.Ball)
             .WithRigidbody()
             .WithPlayer()
-            .WithComponent(new GunComponent(20, 700, 5)
+            .WithComponent(new GunComponent(20, 100, 5)
             {
                 Ammo = 9099
             })
@@ -122,6 +122,18 @@ public static class EntityDirector
         return CreateBaseWall(position, size, rotation)
             .WithSprite(AssetsManager.Ball)
             .WithObstacle(BulletCollisionType.Reflect, true)
+            .Build();
+    }
+
+    public static Entity CreateEnemy(Vector2 position, Vector2[] patrolPoints)
+    {
+        return Builder
+            .WithTransform(position, 0, Vector2.One)
+            .WithVelocity()
+            .WithCollider(new Vector2(32f, 16f))
+            .WithSprite(AssetsManager.Ball)
+            .WithRigidbody()
+            .WithComponent(new EnemyComponent(patrolPoints))
             .Build();
     }
 

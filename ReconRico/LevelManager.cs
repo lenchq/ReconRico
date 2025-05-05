@@ -76,6 +76,14 @@ public static class LevelManager
                     createdEntity =
                         EntityDirector.CreateReflectorBreakableWallObstacle(position, size4, rotation);
                     break;
+                case "enemy":
+                    var patrolPoints = entity.PatrolPoints
+                        .Select(patrolCoords 
+                            => new Vector2(patrolCoords[0], patrolCoords[1]))
+                        .ToArray();
+                    createdEntity = EntityDirector.CreateEnemy(position, patrolPoints);
+                    
+                    break;
 
                 default:
                     Console.WriteLine($"Unknown entity type: {entity.Type}");
@@ -107,4 +115,5 @@ public class LevelEntity
     public float Rotation { get; set; }
     public float[]? Velocity { get; set; }
     public float[]? Size { get; set; }
+    public float[][]? PatrolPoints { get; set; }
 }

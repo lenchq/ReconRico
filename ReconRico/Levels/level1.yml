@@ -2,19 +2,10 @@ entities:
   - type: player
     position: [ 100, 100 ]
     rotation: 0
+  - type: enemy
+    position: [ 500, 500 ]
+    rotation: 0
+    patrolPoints: [ [ 600, 600 ], [ 400, 555 ] ]
   - type: solid_wall
-    position: [ 0, 0 ]
-    size: [ 300, 100 ]
-    rotation: 0
-  - type: reflector_wall
-    position: [ 500, 400 ]
-    size: [ 128, 32 ]
-    rotation: 0
-  - type: breakable_wall
-    position: [ 700, 600 ]
-    size: [ 128, 32 ]
-    rotation: 0
-  - type: reflector_breakable_wall
-    position: [ 300, 300 ]
-    size: [ 128, 32 ]
-    rotation: 0 
+    position: [ 1000, 300 ]
+    size: [ 600, 100 ]
