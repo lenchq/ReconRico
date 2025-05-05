@@ -20,6 +20,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private GameCursorSystem _gameCursorSystem;
     private GunSystem _gunSystem;
     private ScriptSystem _scriptSystem;
+    private EnemySystem _enemySystem;
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
@@ -45,6 +46,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _gameCursorSystem = new GameCursorSystem();
         _gunSystem = new GunSystem();
         _scriptSystem = new ScriptSystem();
+        _enemySystem = new EnemySystem();
 
         _previousKeyboardState = Keyboard.GetState();
         
@@ -64,7 +66,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         try
         {
-            LevelManager.LoadLevel("level5");
+            LevelManager.LoadLevel("level1");
         }
         catch (Exception ex)
         {
@@ -95,6 +97,7 @@ public class Game : Microsoft.Xna.Framework.Game
             _gameCursorSystem.Update(this);
             _gunSystem.Update(gameTime);
             _scriptSystem.Update(gameTime);
+            _enemySystem.Update(gameTime);
         }
 
         base.Update(gameTime);

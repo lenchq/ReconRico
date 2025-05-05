@@ -44,11 +44,13 @@ public class ColliderSystem
             if (SweptIntersects(colliders[i], colliders[j], gameTime))
             {
                 // Check if objects are already intersecting and push them apart
-                if (colliders[i].Rect.Intersects(colliders[j].Rect))
+                if (colliders[i].Rect.Intersects(colliders[j].Rect) &&
+                    colliders[i].Entity.HasComponent<RigidbodyComponent>() &&
+                    colliders[j].Entity.HasComponent<RigidbodyComponent>())
                 {
                     PushApart(colliders[i], colliders[j]);
                 }
-                
+
                 NotifyCollision(colliders[i], colliders[j]);
                 NotifyCollision(colliders[j], colliders[i]);
             }
@@ -61,26 +63,26 @@ public class ColliderSystem
     {
         var aTransform = a.Entity.GetComponent<TransformComponent>();
         var bTransform = b.Entity.GetComponent<TransformComponent>();
-        
+
         // Calculate the overlap
         var intersection = Rectangle.Intersect(a.Rect, b.Rect);
-        
+
         // Calculate the centers
         var aCenter = new Vector2(a.Rect.X + a.Rect.Width / 2f, a.Rect.Y + a.Rect.Height / 2f);
         var bCenter = new Vector2(b.Rect.X + b.Rect.Width / 2f, b.Rect.Y + b.Rect.Height / 2f);
-        
+
         // Calculate the direction from a to b
         var direction = bCenter - aCenter;
         if (direction == Vector2.Zero) direction = Vector2.UnitX; // Fallback if centers are the same
         direction.Normalize();
-        
+
         // Calculate the push distance
         float pushDistance = Math.Max(intersection.Width, intersection.Height) / 2f + MinSeparation;
-        
+
         // Only move the object that has velocity (or both if neither has velocity)
         bool aHasVelocity = a.Entity.HasComponent<VelocityComponent>();
         bool bHasVelocity = b.Entity.HasComponent<VelocityComponent>();
-        
+
         if (aHasVelocity && !bHasVelocity)
         {
             aTransform.Position -= direction * pushDistance;
@@ -135,7 +137,7 @@ public class ColliderSystem
         (Entity Entity, Rectangle Rect, Vector2 Velocity) b)
     {
         if (!a.Entity.TryGetComponent<ColliderResponse>(out var response)) return;
-        
+
         // Calculate intersection point as the center of the intersection rectangle
         var intersection = Rectangle.Intersect(a.Rect, b.Rect);
         var intersectPoint = new Vector2(

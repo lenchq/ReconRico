@@ -35,7 +35,7 @@ public static class LevelManager
         foreach (var entity in levelData.Entities)
         {
             Vector2 position = new(entity.Position[0], entity.Position[1]);
-            var rotation = MathHelper.ToRadians(entity.Rotation);
+            var rotation = 0;
 
             if (position.X < 0 || position.X > MaxWidth || position.Y < 0 || position.Y > MaxHeight)
             {

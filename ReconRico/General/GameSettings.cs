@@ -30,6 +30,9 @@ static class GameSettings
 
     #endregion
 
+    public const float ENEMY_VIEW_RADIUS = 15f;
+    public const float ENEMY_HEAR_RADIUS = 15f;
+
     #region DEBUG CONSTS
 
 #if DEBUG

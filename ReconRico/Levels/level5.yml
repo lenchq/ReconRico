@@ -20,9 +20,4 @@ entities:
   - type: reflector_wall
     position: [ 400, 400 ]
     size: [ 300, 500 ]
-    rotation: 120
-
-  - type: bullet
-    position: [ 0, 360 ]
-    rotation: 180
-    velocity: [ -800, 0 ]
+    rotation: 0

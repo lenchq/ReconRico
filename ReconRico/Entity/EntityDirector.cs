@@ -86,7 +86,7 @@ public static class EntityDirector
             .WithSprite(AssetsManager.Ball)
             .WithRigidbody()
             .WithPlayer()
-            .WithComponent(new GunComponent(20, 100, 5)
+            .WithComponent(new GunComponent(20, 700, 5)
             {
                 Ammo = 9099
             })
