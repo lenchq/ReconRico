@@ -35,7 +35,8 @@ public class LevelEditorSystem
             currentMouseState.Y
         );
         var relativeMousePos = mousePosition - new Vector2(windowPosition.X, windowPosition.Y);
-        Console.WriteLine(mousePosition);
+        if (GameSettings.DEBUG)
+            Console.WriteLine(mousePosition);
 
         // Check for right mouse button press
         if (currentMouseState.RightButton == ButtonState.Pressed &&
