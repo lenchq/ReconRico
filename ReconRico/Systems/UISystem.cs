@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReconRico.General;
+using System.Linq;
+using ReconRico.Components;
 
 namespace ReconRico.Systems;
 
@@ -40,15 +42,49 @@ public class UiSystem(SpriteBatch spriteBatch)
 
     private void DrawUserInterface()
     {
+        var player = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
+            .FirstOrDefault();
+        if (player is null)
+            return;
+        var gun = player.GetComponent<GunComponent>();
+
+        var windowSize = new Point(100, 70);
+        var windowPos = new Vector2( // padding from bottom left corner
+            GameSettings.WINDOW_WIDTH - windowSize.X - 20,
+            GameSettings.WINDOW_HEIGHT - windowSize.Y - 20
+        );
+
+        var windowColor = gun.Ammo > 0
+            ? Color.DarkGray
+            : Color.Red;
+        var windowRect =
+            _textureCreator.CreateBorderedRectangle(windowSize.X, windowSize.Y, windowColor, 3, Color.Black);
+        spriteBatch.Draw(windowRect, windowPos, Color.White);
+
+        // bullet img
+        var bulletPos = windowPos + new Vector2(20, windowSize.Y / 2f);
         spriteBatch.Draw(AssetsManager.Bullet,
-            new Vector2(0, 0),
+            bulletPos,
             null,
             Color.White,
             0f,
-            Vector2.Zero,
+            new Vector2(AssetsManager.Bullet.Width / 2f, AssetsManager.Bullet.Height / 2f),
             1f,
             SpriteEffects.None,
-            1);
+            1f);
+
+        // ammo count
+        var ammoText = gun.Ammo.ToString();
+        var textPos = windowPos + new Vector2(windowSize.X - 40, windowSize.Y / 2f);
+        spriteBatch.DrawString(AssetsManager.DefaultFont,
+            ammoText,
+            textPos,
+            Color.White,
+            0f,
+            AssetsManager.DefaultFont.MeasureString(ammoText) / 2f,
+            1f,
+            SpriteEffects.None,
+            1f);
     }
 
     private void DrawPauseScreen()
