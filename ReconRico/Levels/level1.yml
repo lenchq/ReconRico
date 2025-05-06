@@ -1,11 +1,67 @@
 entities:
   - type: player
-    position: [ 100, 100 ]
+    position: [ 300, 600 ]
     rotation: 0
   - type: enemy
-    position: [ 500, 500 ]
+    position: [ 350, 300 ]
     rotation: 0
-    patrolPoints: [ [ 600, 600 ], [ 400, 555 ] ]
-  - type: solid_wall
+    patrolPoints: [ ]
+  - type: reflector_wall
     position: [ 1000, 300 ]
     size: [ 600, 100 ]
+  - type: reflector_wall
+    position:
+      - 3
+      - 322
+    rotation: 0
+    size:
+      - 158
+      - 642
+  - type: reflector_wall
+    position:
+      - 8
+      - 685
+    rotation: 0
+    size:
+      - 156
+      - 104
+  - type: reflector_wall
+    position:
+      - 695
+      - 17
+    rotation: 0
+    size:
+      - 1280
+      - 172
+  - type: reflector_wall
+    position:
+      - 1001
+      - 300
+    rotation: 0
+    size:
+      - 10
+      - 26
+  - type: reflector_wall
+    position:
+      - 739
+      - 535
+    rotation: 0
+    size:
+      - 116
+      - 376
+  - type: reflector_wall
+    position:
+      - 360
+      - 431
+    rotation: 0
+    size:
+      - 366
+      - 146
+  - type: solid_wall
+    position:
+      - 353
+      - 715
+    rotation: 0
+    size:
+      - 672
+      - 32

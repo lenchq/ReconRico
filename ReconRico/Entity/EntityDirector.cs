@@ -110,7 +110,7 @@ public static class EntityDirector
     public static Entity CreateReflectorWallObstacle(Vector2 position, Vector2 size, float rotation)
     {
         return CreateBaseWall(position, size, rotation)
-            .WithSprite(AssetsManager.Ball)
+            .WithSprite(AssetsManager.Stone)
             .WithObstacle(BulletCollisionType.Reflect, false)
             .Build();
     }
@@ -128,7 +128,7 @@ public static class EntityDirector
         return Builder
             .WithTransform(position, 0, Vector2.One)
             .WithVelocity()
-            .WithCollider(new Vector2(32f, 16f))
+            .WithCollider(new Vector2(64f, 32f))
             .WithSprite(AssetsManager.Ball)
             .WithRigidbody()
             .WithComponent(new EnemyComponent(patrolPoints))

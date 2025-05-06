@@ -77,7 +77,7 @@ public static class LevelManager
                         EntityDirector.CreateReflectorBreakableWallObstacle(position, size4, rotation);
                     break;
                 case "enemy":
-                    var patrolPoints = entity.PatrolPoints
+                    var patrolPoints = entity.PatrolPoints?
                         .Select(patrolCoords 
                             => new Vector2(patrolCoords[0], patrolCoords[1]))
                         .ToArray();

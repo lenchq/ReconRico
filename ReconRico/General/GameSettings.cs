@@ -4,6 +4,8 @@ namespace ReconRico.General;
 
 static class GameSettings
 {
+    public const bool DEBUG = true;
+    
     #region GRAPHICS
 
     public const int WINDOW_WIDTH = 1280;
@@ -26,12 +28,9 @@ static class GameSettings
 
     public const Keys CAMERA_CONTROL_FLY = Keys.LeftShift;
 
-    public const bool IS_MOUSE_VISIBLE = false;
+    public const bool IS_MOUSE_VISIBLE = true;
 
     #endregion
-
-    public const float ENEMY_VIEW_RADIUS = 15f;
-    public const float ENEMY_HEAR_RADIUS = 15f;
 
     #region DEBUG CONSTS
 

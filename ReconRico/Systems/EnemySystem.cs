@@ -59,9 +59,13 @@ public class EnemySystem
             {
                 targetPosition = enemyComponent.LastKnownPlayerPosition.Value;
             }
-            else
+            else if (enemyComponent.PatrolPoints.Length > 0)
             {
                 targetPosition = enemyComponent.PatrolPoints[enemyComponent.CurrentPatrolIndex];
+            }
+            else
+            {
+                return;
             }
 
             // Calculate direction to target

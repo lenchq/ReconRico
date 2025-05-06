@@ -20,11 +20,17 @@ public class RenderSystem(SpriteBatch spriteBatch)
             var sprite = entity.GetComponent<SpriteComponent>();
             var transform = entity.GetComponent<TransformComponent>();
 
+            Rectangle? spriteSize = null;
+            if (entity.TryGetComponent<ColliderComponent>(out var collider))
+            {
+                spriteSize = new Rectangle(Point.Zero, collider.Collider.ToPoint());
+            }
+
             var offset = new Vector2(sprite.Texture.Width / 2f, sprite.Texture.Height / 2f);
 
             spriteBatch.Draw(sprite.Texture,
                 transform.Position,
-                null,
+                spriteSize,
                 sprite.ColorMask,
                 transform.Rotation,
                 offset,

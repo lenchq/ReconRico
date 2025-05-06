@@ -46,7 +46,9 @@ public class ColliderSystem
                 // Check if objects are already intersecting and push them apart
                 if (colliders[i].Rect.Intersects(colliders[j].Rect) &&
                     colliders[i].Entity.HasComponent<RigidbodyComponent>() &&
-                    colliders[j].Entity.HasComponent<RigidbodyComponent>())
+                    colliders[j].Entity.HasComponent<RigidbodyComponent>() &&
+                    !colliders[i].Entity.HasComponent<ObstacleComponent>() &&
+                    !colliders[j].Entity.HasComponent<ObstacleComponent>())
                 {
                     PushApart(colliders[i], colliders[j]);
                 }

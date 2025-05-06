@@ -22,6 +22,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private ScriptSystem _scriptSystem;
     private EnemySystem _enemySystem;
     private UISystem _uiSystem;
+    private LevelEditorSystem _levelEditorSystem;
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
@@ -49,6 +50,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _gunSystem = new GunSystem();
         _scriptSystem = new ScriptSystem();
         _enemySystem = new EnemySystem();
+        _levelEditorSystem = new LevelEditorSystem();
 
         _previousKeyboardState = Keyboard.GetState();
 
@@ -99,6 +101,7 @@ public class Game : Microsoft.Xna.Framework.Game
             _gunSystem.Update(gameTime);
             _scriptSystem.Update(gameTime);
             _enemySystem.Update(gameTime);
+            _levelEditorSystem.Update(Window.Position, gameTime);
         }
 
         base.Update(gameTime);
