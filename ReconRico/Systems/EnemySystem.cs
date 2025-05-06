@@ -12,7 +12,6 @@ public class EnemySystem
 
     public void Update(GameTime gameTime)
     {
-        // Find player if not already found
         if (!_playerRef.TryGetTarget(out var player)
             || player.IsDestroyed)
         {
@@ -44,14 +43,11 @@ public class EnemySystem
                     enemyComponent.LastKnownPlayerPosition = null;
                 }
             }
-
-            // Check for player detection
-            bool canSeePlayer = CanSeePlayer(enemy, transform);
-            bool canHearPlayer = CanHearPlayer(enemy, transform);
+            var canSeePlayer = CanSeePlayer(enemy, transform);
+            var canHearPlayer = CanHearPlayer(enemy, transform);
 
             if (canSeePlayer || canHearPlayer)
             {
-                // Update last known position and alert state
                 enemyComponent.IsAlerted = true;
                 enemyComponent.AlertTimer = enemyComponent.AlertDuration;
                 enemyComponent.LastKnownPlayerPosition = player.GetComponent<TransformComponent>().Position;
@@ -61,7 +57,6 @@ public class EnemySystem
             }
 
             var isCatching = false;
-            // Move towards target (either patrol point or player)
             Vector2 targetPosition;
             if (enemyComponent.IsAlerted && enemyComponent.LastKnownPlayerPosition.HasValue)
             {
@@ -110,30 +105,24 @@ public class EnemySystem
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
 
-        // Check distance
         var distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
         if (distance > enemyComponent.VisionRadius)
             return false;
 
-        // Check if player is within vision angle
         var directionToPlayer = playerTransform.Position - enemyTransform.Position;
         directionToPlayer.Normalize();
 
-        // Convert enemy's forward direction to angle
-        var enemyAngle = enemyTransform.Rotation - MathHelper.PiOver2; // Adjust for sprite orientation
+        var enemyAngle = enemyTransform.Rotation - MathHelper.PiOver2;
         var enemyForward = new Vector2(
             (float)Math.Cos(enemyAngle),
             (float)Math.Sin(enemyAngle)
         );
 
-        // Calculate angle between enemy's forward direction and direction to player
         var angle = (float)Math.Acos(Vector2.Dot(enemyForward, directionToPlayer));
         var angleDegrees = MathHelper.ToDegrees(angle);
 
-        // Check if angle is within vision cone
         if (angleDegrees > enemyComponent.VisionAngle / 2) return false;
 
-        // Check for line of sight (no walls in between)
         return !HasLineOfSightBlocked(enemyTransform.Position, playerTransform.Position);
     }
 
@@ -146,7 +135,6 @@ public class EnemySystem
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
 
-        // if player is within hearing radius
         var dist = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
         return dist <= enemyComponent.HearRadius;
     }
@@ -172,7 +160,6 @@ public class EnemySystem
 
     private bool LineIntersectsRectangle(Vector2 start, Vector2 end, Rectangle rect)
     {
-        // Check intersection on any of the rectangle edges
         Vector2[] corners =
         [
             new(rect.Left, rect.Top),

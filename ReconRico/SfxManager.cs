@@ -32,7 +32,7 @@ public static class SfxManager
     {
         if (!SoundsEnabled)
             return;
-        Shoot.Play(1f, 0, 0);
+        Shoot.Play(.8f, 0, 0);
     }
 
     public static void PlayRicochet()
@@ -53,7 +53,7 @@ public static class SfxManager
     {
         if (!SoundsEnabled)
             return;
-        Hit.Play(1f, 0, 0);
+        Hit.Play(.8f, 0, 0);
     }
 
     public static void PlayPause()
@@ -69,16 +69,18 @@ public static class SfxManager
             return;
         Resume.Play(0.3f, 0, 0);
     }
+
     public static void PlayPickup()
     {
         if (!SoundsEnabled)
             return;
-        Pickup.Play(1f, 0, 0);
+        Pickup.Play(.7f, 0, 0);
     }
+
     public static void PlayAlarm()
     {
         if (!SoundsEnabled)
             return;
-        Alarm.Play(1f, 0, 0);
+        Alarm.Play(.6f, 0, 0);
     }
 }

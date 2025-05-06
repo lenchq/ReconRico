@@ -106,19 +106,15 @@ public class UiSystem(SpriteBatch spriteBatch)
         var gameOverText = AssetsManager.GAME_OVER_TEXT;
         var font = AssetsManager.DefaultFont;
         var textSize = font.MeasureString(gameOverText);
-
-        // Create 800x800 window centered on screen
+        
         var windowSize = new Point(450, 100);
         var windowPos = new Vector2(
             (GameSettings.WINDOW_WIDTH - windowSize.X) / 2f,
             (GameSettings.WINDOW_HEIGHT - windowSize.Y) / 2f
         );
-
-        // Draw red window with black border
         var windowRect = _textureCreator.CreateBorderedRectangle(windowSize.X, windowSize.Y, Color.Red, 3, Color.Black);
         spriteBatch.Draw(windowRect, windowPos, Color.White);
-
-        // Draw "GAME OVER" text centered in window
+        
         var textPos = windowPos + new Vector2(
             (windowSize.X - textSize.X) / 2f,
             (windowSize.Y - textSize.Y) / 2f

@@ -1,23 +1,74 @@
 entities:
   - type: player
-    position: [ 100, 360 ]
+    position: [ 50, 700 ]
     rotation: 0
 
+  # Отражающие стены (внешние границы)
   - type: reflector_wall
-    position: [ 200, 300 ]
-    size: [ 64, 64 ]
-    rotation: 0
+    position: [ 640, 20 ]
+    size: [ 640, 20 ]
+  - type: reflector_wall
+    position: [ 640, 780 ]
+    size: [ 640, 20 ]
 
-  - type: reflector_wall
-    position: [ 200, 420 ]
-    size: [ 64, 64 ]
+  # Комната 1 (вход)
+  - type: glass_wall
+    position: [ 300, 600 ]
+    size: [ 100, 10 ]
+  - type: enemy
+    position: [ 350, 550 ]
     rotation: 0
+    patrolPoints: [ [ 340, 550 ], [ 360, 550 ] ]
 
-  - type: reflector_wall
-    position: [ 260, 360 ]
-    size: [ 64, 64 ]
+  # Дверь в комнату 2
+  - type: absorb_breakable_wall
+    position: [ 450, 500 ]
+    size: [ 10, 100 ]
+
+  # Комната 2 (угроза сверху)
+  - type: pass_breakable_wall
+    position: [ 550, 400 ]
+    size: [ 100, 10 ]
+  - type: enemy
+    position: [ 600, 370 ]
     rotation: 0
-  - type: reflector_wall
-    position: [ 400, 400 ]
-    size: [ 300, 500 ]
+    patrolPoints: [ [ 600, 350 ], [ 600, 390 ] ]
+  - type: pass_breakable_wall
+    position: [ 650, 500 ]
+    size: [ 10, 100 ]
+
+  # Комната 3 (двойная цель)
+  - type: pass_breakable_wall
+    position: [ 750, 600 ]
+    size: [ 100, 10 ]
+  - type: pass_breakable_wall
+    position: [ 750, 400 ]
+    size: [ 100, 10 ]
+  - type: enemy
+    position: [ 800, 370 ]
     rotation: 0
+    patrolPoints: [ [ 780, 370 ], [ 820, 370 ] ]
+  - type: enemy
+    position: [ 800, 630 ]
+    rotation: 0
+    patrolPoints: [ [ 780, 630 ], [ 820, 630 ] ]
+  - type: absorb_breakable_wall
+    position: [ 900, 500 ]
+    size: [ 10, 100 ]
+
+  # Комната 4 (узкий проход и отражения)
+  - type: reflector_wall
+    position: [ 1000, 600 ]
+    size: [ 60, 10 ]
+  - type: reflector_wall
+    position: [ 1000, 400 ]
+    size: [ 60, 10 ]
+  - type: enemy
+    position: [ 1020, 500 ]
+    rotation: 0
+    patrolPoints: [ [ 1000, 500 ], [ 1040, 500 ] ]
+
+  # Финал
+  - type: door
+    position: [ 1180, 500 ]
+    size: [ 60, 200 ]

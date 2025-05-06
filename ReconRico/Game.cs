@@ -90,6 +90,8 @@ public class Game : Microsoft.Xna.Framework.Game
 
         if (IsKeyDown(Keys.R))
         {
+            if (_currentLevel == 5)
+                _currentLevel = 1;
             LoadCurrentLevel();
             _gameState = GameState.Playing;
             return;

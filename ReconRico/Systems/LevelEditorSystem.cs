@@ -54,7 +54,7 @@ public class LevelEditorSystem
                     break;
 
                 case EditorState.WaitingForHeight:
-                    float wallHeight = Math.Abs(mousePosition.Y - _wallCenter.Y);
+                    var wallHeight = Math.Abs(mousePosition.Y - _wallCenter.Y);
                     CreateWall(_wallCenter, new Vector2(_wallWidth * 2, wallHeight * 2));
                     _currentState = EditorState.Idle;
                     break;

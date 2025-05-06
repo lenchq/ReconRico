@@ -38,24 +38,23 @@ public class ColliderSystem
     private void CheckCollisions((Entity Entity, Rectangle Rect, Vector2 Velocity)[] colliders,
         GameTime gameTime)
     {
-        for (int i = 0; i < colliders.Length; i++)
-        for (int j = i + 1; j < colliders.Length; j++)
+        for (var i = 0; i < colliders.Length; i++)
+        for (var j = i + 1; j < colliders.Length; j++)
         {
-            if (SweptIntersects(colliders[i], colliders[j], gameTime))
+            if (!SweptIntersects(colliders[i], colliders[j], gameTime)) continue;
+            
+            // Check if objects are already intersecting and push them apart
+            if (colliders[i].Rect.Intersects(colliders[j].Rect) &&
+                colliders[i].Entity.HasComponent<RigidbodyComponent>() &&
+                colliders[j].Entity.HasComponent<RigidbodyComponent>() &&
+                !colliders[i].Entity.HasComponent<ObstacleComponent>() &&
+                !colliders[j].Entity.HasComponent<ObstacleComponent>())
             {
-                // Check if objects are already intersecting and push them apart
-                if (colliders[i].Rect.Intersects(colliders[j].Rect) &&
-                    colliders[i].Entity.HasComponent<RigidbodyComponent>() &&
-                    colliders[j].Entity.HasComponent<RigidbodyComponent>() &&
-                    !colliders[i].Entity.HasComponent<ObstacleComponent>() &&
-                    !colliders[j].Entity.HasComponent<ObstacleComponent>())
-                {
-                    PushApart(colliders[i], colliders[j]);
-                }
-
-                NotifyCollision(colliders[i], colliders[j]);
-                NotifyCollision(colliders[j], colliders[i]);
+                PushApart(colliders[i], colliders[j]);
             }
+
+            NotifyCollision(colliders[i], colliders[j]);
+            NotifyCollision(colliders[j], colliders[i]);
         }
     }
 
@@ -78,12 +77,9 @@ public class ColliderSystem
         if (direction == Vector2.Zero) direction = Vector2.UnitX; // Fallback if centers are the same
         direction.Normalize();
 
-        // Calculate the push distance
-        float pushDistance = Math.Max(intersection.Width, intersection.Height) / 2f + MinSeparation;
-
-        // Only move the object that has velocity (or both if neither has velocity)
-        bool aHasVelocity = a.Entity.HasComponent<VelocityComponent>();
-        bool bHasVelocity = b.Entity.HasComponent<VelocityComponent>();
+        var pushDistance = Math.Max(intersection.Width, intersection.Height) / 2f + MinSeparation;
+        var aHasVelocity = a.Entity.HasComponent<VelocityComponent>();
+        var bHasVelocity = b.Entity.HasComponent<VelocityComponent>();
 
         if (aHasVelocity && !bHasVelocity)
         {
@@ -105,10 +101,10 @@ public class ColliderSystem
         (Entity Entity, Rectangle Rect, Vector2 Velocity) a,
         (Entity Entity, Rectangle Rect, Vector2 Velocity) b, GameTime gameTime)
     {
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-        float stepSize = deltaTime / Substeps;
+        var deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+        var stepSize = deltaTime / Substeps;
 
-        for (int step = 0; step <= Substeps; step++)
+        for (var step = 0; step <= Substeps; step++)
         {
             var posA = new Vector2(a.Rect.X, a.Rect.Y) + a.Velocity * stepSize * step;
             var posB = new Vector2(b.Rect.X, b.Rect.Y) + b.Velocity * stepSize * step;

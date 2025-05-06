@@ -15,5 +15,9 @@
     &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.IsSubsetTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::SubsetTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.ExtensionTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.LevelManagerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.EntityBuilderTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.EntityDirectorTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DEDEB95D-0CCB-4621-BF5E-556101B65719::net8.0::ReconRico.Tests.TextureCreatorTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
