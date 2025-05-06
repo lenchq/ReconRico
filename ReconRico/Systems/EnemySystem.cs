@@ -5,7 +5,8 @@ namespace ReconRico.Systems;
 
 public class EnemySystem
 {
-    private const float MovementSpeed = .5f;
+    private const float CatchMovementSpeed = .5f;
+    private const float PatrolMovementSpeed = .3f;
     private const float PatrolPointReachedDistance = 10f;
     private readonly WeakReference<Entity?> _playerRef = new(null, false);
 
@@ -59,10 +60,14 @@ public class EnemySystem
                     SfxManager.PlayAlarm();
             }
 
+            var isCatching = false;
             // Move towards target (either patrol point or player)
             Vector2 targetPosition;
             if (enemyComponent.IsAlerted && enemyComponent.LastKnownPlayerPosition.HasValue)
+            {
+                isCatching = true;
                 targetPosition = enemyComponent.LastKnownPlayerPosition.Value;
+            }
             else if (enemyComponent.PatrolPoints.Length > 0)
                 targetPosition = enemyComponent.PatrolPoints[enemyComponent.CurrentPatrolIndex];
             else // No patrol points, no player visible
@@ -73,14 +78,16 @@ public class EnemySystem
                 Vector2.Distance(transform.Position, targetPosition) > 2f)
             {
                 direction.Normalize();
-                velocity.Velocity = direction * MovementSpeed;
+                var speed = isCatching ? CatchMovementSpeed : PatrolMovementSpeed;
+                velocity.Velocity = direction * speed;
                 transform.Rotation = (float)Math.Atan2(direction.Y, direction.X) + MathHelper.PiOver2;
             }
             else
                 velocity.Velocity = Vector2.Zero;
 
             // Check if enemy is close enough to destroy player
-            if (Vector2.Distance(transform.Position, player.GetComponent<TransformComponent>().Position) <= 70f)
+            if (!player.IsDestroyed
+                && Vector2.Distance(transform.Position, player.GetComponent<TransformComponent>().Position) <= 70f)
             {
                 player.Destroy();
                 SfxManager.PlayExplosion();
@@ -96,11 +103,12 @@ public class EnemySystem
 
     private bool CanSeePlayer(Entity enemy, TransformComponent enemyTransform)
     {
-        if (!_playerRef.TryGetTarget(out var player))
+        if (!_playerRef.TryGetTarget(out var player)
+            || player.IsDestroyed
+            || !player.TryGetComponent<TransformComponent>(out var playerTransform))
             return false;
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
-        var playerTransform = player.GetComponent<TransformComponent>();
 
         // Check distance
         var distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
@@ -131,11 +139,12 @@ public class EnemySystem
 
     private bool CanHearPlayer(Entity enemy, TransformComponent enemyTransform)
     {
-        if (!_playerRef.TryGetTarget(out var player))
+        if (!_playerRef.TryGetTarget(out var player)
+            || player.IsDestroyed
+            || !player.TryGetComponent<TransformComponent>(out var playerTransform))
             return false;
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
-        var playerTransform = player.GetComponent<TransformComponent>();
 
         // if player is within hearing radius
         var dist = Vector2.Distance(enemyTransform.Position, playerTransform.Position);

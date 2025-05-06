@@ -5,6 +5,8 @@ namespace ReconRico.Systems;
 
 public class GunSystem
 {
+    public const float BULLET_SPEED = 1100f;
+    
     public void Update(GameTime gameTime)
     {
         foreach (var (entity, gun) in EntityManager.GetEntitiesWithAll(
@@ -26,7 +28,7 @@ public class GunSystem
             Console.WriteLine("shoot");
             var bulletOffset = Vector2.Rotate(Vector2.UnitY * -35f, entPos.Rotation);
             var bullet = EntityDirector.CreateBullet(entPos.Position + bulletOffset,
-                entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * 800f, entPos.Rotation));
+                entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * BULLET_SPEED, entPos.Rotation), gun.RicochetTimes);
             EntityManager.AddEntity(bullet);
             gun.Ammo -= 1;
             gun.LastShoot = gameTime.TotalGameTime.TotalMilliseconds;

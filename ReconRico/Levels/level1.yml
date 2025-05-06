@@ -65,6 +65,14 @@ entities:
     size:
       - 672
       - 32
+  - type: pass_breakable_wall
+    position:
+      - 614
+      - 434
+    rotation: 0
+    size:
+      - 132
+      - 20
   - type: door
     position:
       - 1206

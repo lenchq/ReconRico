@@ -5,15 +5,15 @@ namespace ReconRico.General;
 static class GameSettings
 {
     public const bool DEBUG = true;
-    
+
     #region GRAPHICS
 
     public const int WINDOW_WIDTH = 1280;
     public const int WINDOW_HEIGHT = 720;
 
     #endregion
-    
-    
+
+
     #region PLAYER CONTROLS
 
     public const Keys PLAYER_MOVE_UP_KEY = Keys.W;
@@ -28,14 +28,14 @@ static class GameSettings
 
     public const Keys CAMERA_CONTROL_FLY = Keys.LeftShift;
 
-    public const bool IS_MOUSE_VISIBLE = true;
-    public const bool GRAB_MOUSE = false;
+    public const bool IS_MOUSE_VISIBLE = !false;
+    public const bool GRAB_MOUSE = !true;
 
     #endregion
 
     #region DEBUG CONSTS
 
-#if DEBUG
+#if false
     public const bool COLLIDER_GIZMO = true;
     public const bool TRANSFORM_GIZMO = true;
 #else

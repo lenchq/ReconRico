@@ -14,19 +14,23 @@ public static class EntityDirector
     {
         return Builder
             .WithTransform(new Vector2(GameSettings.WINDOW_WIDTH / 2f, GameSettings.WINDOW_HEIGHT / 2f), 0,
-                Vector2.One)
+                Vector2.One, 1)
             .WithSprite(AssetsManager.Cursor)
             .WithComponent(new GameCursorComponent())
             .Build();
     }
 
-    public static Entity CreateBullet(Vector2 position, float rotation, Vector2 velocity)
+    public static Entity CreateBullet(Vector2 position, float rotation, Vector2 velocity, int maxRicochetTimes)
     {
         return Builder
             .WithTransform(position, rotation, new Vector2(0.5f, 0.5f), 0)
             .WithVelocity(velocity)
             .WithSprite(AssetsManager.Bullet)
             .WithCollider(new Vector2(12, 12))
+            .WithComponent(new ProjectileComponent
+            {
+                MaxRicochetTimes = maxRicochetTimes,
+            })
             .WithColliderResponse(e =>
             {
                 var bullet = EntityManager.Entities[e.SourceId];
@@ -46,6 +50,7 @@ public static class EntityDirector
                 var bulletPos = bullet.GetComponent<TransformComponent>();
                 var bulletVel = bullet.GetComponent<VelocityComponent>();
                 var bulletCollider = bullet.GetComponent<ColliderComponent>();
+                var bulletProj = bullet.GetComponent<ProjectileComponent>();
 
                 var targetPos = target.GetComponent<TransformComponent>();
                 var targetCollider = target.GetComponent<ColliderComponent>();
@@ -55,18 +60,29 @@ public static class EntityDirector
 
                 else if (target.TryGetComponent<ObstacleComponent>(out var obstacle))
                 {
-                    if (obstacle.BulletCollisionType == BulletCollisionType.Reflect)
+                    switch (obstacle.BulletCollisionType)
                     {
-                        var reflectedVelocity = GunSystem.GetWallReflectedVelocity(velocity, bulletCollider, bulletPos,
-                            targetCollider, targetPos, bulletVel);
+                        case BulletCollisionType.Reflect:
+                            if (bulletProj.RicochetTimes++ > maxRicochetTimes)
+                            {
+                                bullet.Destroy();
+                                break;
+                            }
 
-                        bulletVel.Velocity = reflectedVelocity;
-                        bulletPos.Rotation =
-                            (float)Math.Atan2(reflectedVelocity.Y, reflectedVelocity.X) + MathHelper.PiOver2;
-                        SfxManager.PlayRicochet();
+                            var reflectedVelocity = GunSystem.GetWallReflectedVelocity(velocity, bulletCollider,
+                                bulletPos,
+                                targetCollider, targetPos, bulletVel);
+
+                            bulletVel.Velocity = reflectedVelocity;
+                            bulletPos.Rotation =
+                                (float)Math.Atan2(reflectedVelocity.Y, reflectedVelocity.X) + MathHelper.PiOver2;
+                            SfxManager.PlayRicochet();
+
+                            break;
+                        case BulletCollisionType.Absorb:
+                            bullet.Destroy();
+                            break;
                     }
-                    else
-                        bullet.Destroy();
 
                     if (obstacle.IsBreakable)
                         target.Destroy();
@@ -80,7 +96,6 @@ public static class EntityDirector
                     entity.Destroy();
                 }
             })
-            .WithComponent(new ProjectileComponent())
             .Build();
     }
 
@@ -90,25 +105,33 @@ public static class EntityDirector
             .WithTransform(position, rotation, Vector2.One)
             .WithVelocity()
             .WithCollider(new Vector2(64, 32))
-            .WithSprite(AssetsManager.Ball)
+            .WithSprite(AssetsManager.Player)
             .WithRigidbody()
             .WithPlayer()
-            .WithComponent(new GunComponent(10, 100, 5))
+            .WithComponent(new GunComponent(10, 100, 8))
             .Build();
     }
 
     public static Entity CreateSolidWallObstacle(Vector2 position, Vector2 size, float rotation)
     {
         return CreateBaseWall(position, size, rotation)
-            .WithSprite(AssetsManager.Ball)
+            // .WithSprite(AssetsManager.Ball)
             .WithObstacle(BulletCollisionType.Absorb, false)
             .Build();
     }
 
-    public static Entity CreateBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
+    public static Entity CreatePassBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
     {
         return CreateBaseWall(position, size, rotation)
-            .WithSprite(AssetsManager.Ball)
+            // .WithSprite(AssetsManager.Ball)
+            .WithObstacle(BulletCollisionType.Pass, true)
+            .Build();
+    }
+
+    public static Entity CreateAbsorbBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
+    {
+        return CreateBaseWall(position, size, rotation)
+            // .WithSprite(AssetsManager.Ball)
             .WithObstacle(BulletCollisionType.Absorb, true)
             .Build();
     }
@@ -116,7 +139,7 @@ public static class EntityDirector
     public static Entity CreateReflectorWallObstacle(Vector2 position, Vector2 size, float rotation)
     {
         return CreateBaseWall(position, size, rotation)
-            .WithSprite(AssetsManager.Ball, true)
+            // .WithSprite(AssetsManager.Ball, true)
             .WithObstacle(BulletCollisionType.Reflect, false)
             .Build();
     }
@@ -124,7 +147,7 @@ public static class EntityDirector
     public static Entity CreateReflectorBreakableWallObstacle(Vector2 position, Vector2 size, float rotation)
     {
         return CreateBaseWall(position, size, rotation)
-            .WithSprite(AssetsManager.Ball)
+            // .WithSprite(AssetsManager.Ball)
             .WithObstacle(BulletCollisionType.Reflect, true)
             .Build();
     }
@@ -144,7 +167,7 @@ public static class EntityDirector
             .WithTransform(position, 0, Vector2.One)
             .WithVelocity()
             .WithCollider(new Vector2(64f, 32f))
-            .WithSprite(AssetsManager.Ball)
+            .WithSprite(AssetsManager.Enemy)
             .WithRigidbody()
             .WithComponent(new EnemyComponent(patrolPoints))
             .OnDestroy(_ => { SfxManager.PlayHit(); })

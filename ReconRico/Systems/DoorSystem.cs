@@ -6,7 +6,6 @@ namespace ReconRico.Systems;
 
 public class DoorSystem(Game _game)
 {
-
     public void Update(GameTime gameTime)
     {
         foreach (var door in EntityManager.GetEntitiesWithComponent<DoorComponent>()
@@ -14,7 +13,7 @@ public class DoorSystem(Game _game)
         {
             door.RegisterComponent(new ColliderResponse()
             {
-                OnCollision = (e) =>
+                OnCollision = e =>
                 {
                     var source = EntityManager.Entities[e.SourceId];
                     var target = EntityManager.Entities[e.TargetId];

@@ -1,19 +1,108 @@
 entities:
   - type: player
-    position: [ 150, 150 ]
+    position: [ 70, 660 ]
     rotation: 0
-
-  - type: breakable_wall
-    position: [ 300, 150 ]
-    size: [ 64, 64 ]
-    rotation: 0
-
-  - type: bullet
-    position: [ 200, 150 ]
-    rotation: 0
-    velocity: [ 5, 0 ]
-
   - type: solid_wall
-    position: [ 400, 150 ]
-    size: [ 64, 64 ]
+    position:
+      - 4
+      - 319
     rotation: 0
+    size:
+      - 58
+      - 642
+  - type: solid_wall
+    position:
+      - 11
+      - 679
+    rotation: 0
+    size:
+      - 48
+      - 90
+  - type: reflector_wall
+    position:
+      - 693
+      - 708
+    rotation: 0
+    size:
+      - 1168
+      - 20
+  - type: solid_wall
+    position:
+      - 131
+      - 633
+    rotation: 0
+    size:
+      - 44
+      - 140
+  - type: reflector_wall
+    position:
+      - 323
+      - 5
+    rotation: 0
+    size:
+      - 1424
+      - 654
+  - type: pass_breakable_wall
+    position:
+      - 410
+      - 515
+    rotation: 0
+    size:
+      - 30
+      - 370
+  - type: pass_breakable_wall
+    position:
+      - 663
+      - 515
+    rotation: 0
+    size:
+      - 30
+      - 370
+  - type: pass_breakable_wall
+    position:
+      - 915
+      - 515
+    rotation: 0
+    size:
+      - 30
+      - 370
+  - type: solid_wall
+    position:
+      - 1254
+      - 354
+    rotation: 0
+    size:
+      - 48
+      - 702
+  #  - type: enemy
+  #    position: [ 240, 650 ]
+  #    rotation: 0
+  #    patrolPoints: [ [ 240, 650 ], [ 350, 365 ] ]
+  - type: enemy
+    position: [ 300, 360 ]
+    rotation: 0
+    patrolPoints: [ [ 300, 360 ], [ 341, 655 ] ]
+  - type: enemy
+    position: [ 478, 650 ]
+    rotation: 0
+    patrolPoints: [ [ 478, 650 ], [ 464, 361 ] ]
+  - type: enemy
+    position: [ 586, 359 ]
+    rotation: 0
+    patrolPoints: [ [ 586, 359 ], [ 592, 626 ] ]
+  - type: enemy
+    position: [ 725, 640 ]
+    rotation: 0
+    patrolPoints: [ [ 725, 640 ], [ 725, 366 ] ]
+  - type: enemy
+    position: [ 855, 381 ]
+    rotation: 0
+    patrolPoints: [ [ 855, 381 ], [ 845, 657 ] ]
+  - type: door
+    position:
+      - 1122
+      - 143
+    rotation: 0
+    size:
+      - 212
+      - 270

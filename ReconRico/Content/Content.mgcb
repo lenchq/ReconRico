@@ -20,14 +20,14 @@
 /processorParam:TextureFormat=Compressed
 /build:Arial.spritefont
 
-#begin fonts/ElectonicHighway-12pt.spritefont
+#begin fonts/ElectronicHighway-12pt.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/ElectronicHighway-12pt.spritefont
 
-#begin fonts/ElectonicHighway-24pt.spritefont
+#begin fonts/ElectronicHighway-24pt.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
@@ -117,6 +117,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:sprites/cursor.png
+
+#begin sprites/enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/enemy.png
+
+#begin sprites/player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/player.png
 
 #begin stone.jpg
 /importer:TextureImporter

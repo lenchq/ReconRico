@@ -1,19 +1,188 @@
 entities:
   - type: player
-    position: [ 100, 100 ]
+    position: [ 30, 100 ]
     rotation: 0
-
+  - type: solid_wall
+    position:
+      - 458
+      - 15
+    rotation: 0
+    size:
+      - 912
+      - 52
+  - type: solid_wall
+    position:
+      - 1147
+      - 4
+    rotation: 0
+    size:
+      - 210
+      - 48
+  - type: solid_wall
+    position:
+      - 1277
+      - 3
+    rotation: 0
+    size:
+      - 54
+      - 48
   - type: reflector_wall
-    position: [ 500, 200 ]
-    size: [ 128, 32 ]
-    rotation: 30
-
+    position:
+      - 850
+      - 330
+    rotation: 0
+    size:
+      - 124
+      - 594
+  - type: reflector_wall
+    position:
+      - 10
+      - 391
+    rotation: 0
+    size:
+      - 326
+      - 386
+  - type: reflector_wall
+    position:
+      - 366
+      - 260
+    rotation: 0
+    size:
+      - 462
+      - 126
+  - type: pass_breakable_wall
+    position:
+      - 692
+      - 260
+    rotation: 0
+    size:
+      - 190
+      - 25
+  - type: solid_wall
+    position:
+      - 972
+      - 581
+    rotation: 0
+    size:
+      - 328
+      - 58
+  - type: solid_wall
+    position:
+      - 1175
+      - 407
+    rotation: 0
+    size:
+      - 282
+      - 72
+  - type: solid_wall
+    position:
+      - 982
+      - 214
+    rotation: 0
+    size:
+      - 298
+      - 80
+  - type: reflector_wall
+    position:
+      - 631
+      - 711
+    rotation: 0
+    size:
+      - 1294
+      - 50
+  - type: solid_wall
+    position:
+      - -1
+      - 629
+    rotation: 0
+    size:
+      - 32
+      - 120
+  - type: solid_wall
+    position:
+      - 2
+      - 637
+    rotation: 0
+    size:
+      - 30
+      - 126
+  - type: absorb_breakable_wall
+    position:
+      - 807
+      - 654
+    rotation: 0
+    size:
+      - 46
+      - 50
+  - type: absorb_breakable_wall
+    position:
+      - 870
+      - 653
+    rotation: 0
+    size:
+      - 46
+      - 50
+  - type: absorb_breakable_wall
+    position:
+      - 933
+      - 653
+    rotation: 0
+    size:
+      - 46
+      - 50
+  - type: absorb_breakable_wall
+    position:
+      - 996
+      - 653
+    rotation: 0
+    size:
+      - 46
+      - 50
   - type: bullet
-    position: [ 200, 300 ]
+    position: [ 90, 660 ]
     rotation: 0
     velocity: [ 0, 0 ]
-
-  - type: solid_wall
-    position: [ 600, 400 ]
-    size: [ 64, 64 ]
+  - type: bullet
+    position: [ 128, 605 ]
     rotation: 0
+    velocity: [ 0, 0 ]
+  - type: bullet
+    position: [ 50, 600 ]
+    rotation: 0
+    velocity: [ 0, 0 ]
+  - type: enemy
+    position: [ 220, 370 ]
+    rotation: 0
+    patrolPoints: [ [ 220, 370 ], [ 580, 370 ] ]
+  - type: enemy
+    position: [ 580, 470 ]
+    rotation: 0
+    patrolPoints: [ [ 580, 470 ], [ 220, 470 ] ]
+  - type: enemy
+    position: [ 220, 540 ]
+    rotation: 0
+    patrolPoints: [ [ 220, 540 ], [ 580, 540 ] ]
+  - type: enemy
+    position: [ 580, 630 ]
+    rotation: 0
+    patrolPoints: [ [ 580, 630 ], [ 220, 630 ] ]
+  - type: enemy
+    position: [ 1210, 500 ]
+    rotation: 0
+    patrolPoints: [ [ 1210, 500 ], [ 970, 500 ] ]
+  - type: enemy
+    position: [ 970, 310 ]
+    rotation: 0
+    patrolPoints: [ [ 970, 310 ], [ 1210, 310 ] ]
+  - type: enemy
+    position: [ 1210, 90 ]
+    rotation: 0
+    patrolPoints: [ [ 1210, 90 ], [ 970, 90 ] ]
+  - type: door
+    position:
+      - 969
+      - 0
+    rotation: 0
+    size:
+      - 146
+      - 44

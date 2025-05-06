@@ -19,5 +19,10 @@ public enum BulletCollisionType
     /// <summary>
     /// Absorbable obstacle, absorbing any bullet every time.
     /// </summary>
-    Absorb
+    Absorb,
+    
+    /// <summary>
+    /// Pass bullet through
+    /// </summary>
+    Pass
 }

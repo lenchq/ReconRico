@@ -68,7 +68,7 @@ public static class LevelManager
 
                 case "bullet":
                     Vector2 velocity = new(entity.Velocity[0], entity.Velocity[1]);
-                    createdEntity = EntityDirector.CreateBullet(position, rotation, velocity);
+                    createdEntity = EntityDirector.CreateBullet(position, rotation, velocity, 0);
                     break;
 
                 case "solid_wall":
@@ -76,9 +76,15 @@ public static class LevelManager
                     createdEntity = EntityDirector.CreateSolidWallObstacle(position, solidWallSize, rotation);
                     break;
 
-                case "breakable_wall":
-                    Vector2 breakableWallSize = new(entity.Size[0], entity.Size[1]);
-                    createdEntity = EntityDirector.CreateBreakableWallObstacle(position, breakableWallSize, rotation);
+                case "pass_breakable_wall":
+                    Vector2 passBreakableWall = new(entity.Size[0], entity.Size[1]);
+                    createdEntity =
+                        EntityDirector.CreatePassBreakableWallObstacle(position, passBreakableWall, rotation);
+                    break;
+                case "absorb_breakable_wall":
+                    Vector2 absorbBreakableWallSize = new(entity.Size[0], entity.Size[1]);
+                    createdEntity =
+                        EntityDirector.CreateAbsorbBreakableWallObstacle(position, absorbBreakableWallSize, rotation);
                     break;
 
                 case "reflector_wall":

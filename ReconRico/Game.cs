@@ -27,7 +27,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
-    private int _currentLevel = 1;
+    private int _currentLevel = 3;
 
     public int CurrentLevel
     {
@@ -127,7 +127,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.White);
+        GraphicsDevice.Clear(Color.LightGray);
 
         _renderSystem.Render(gameTime);
         _uiSystem.Render(gameTime, _gameState);
