@@ -129,6 +129,15 @@ public static class EntityDirector
             .Build();
     }
 
+    public static Entity CreateDoor(Vector2 position, Vector2 size)
+    {
+        return Builder
+            .WithTransform(position, 0, Vector2.One)
+            .WithCollider(size)
+            .WithComponent(new DoorComponent())
+            .Build();
+    }
+
     public static Entity CreateEnemy(Vector2 position, Vector2[] patrolPoints)
     {
         return Builder

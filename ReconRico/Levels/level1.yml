@@ -65,3 +65,11 @@ entities:
     size:
       - 672
       - 32
+  - type: door
+    position:
+      - 1206
+      - 178
+    rotation: 0
+    size:
+      - 134
+      - 192

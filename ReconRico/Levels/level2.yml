@@ -11,7 +11,7 @@ entities:
   - type: bullet
     position: [ 200, 300 ]
     rotation: 0
-    velocity: [ 6, 0 ]
+    velocity: [ 0, 0 ]
 
   - type: solid_wall
     position: [ 600, 400 ]

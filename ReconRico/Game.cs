@@ -23,10 +23,17 @@ public class Game : Microsoft.Xna.Framework.Game
     private EnemySystem _enemySystem;
     private UiSystem _uiSystem;
     private LevelEditorSystem _levelEditorSystem;
+    private DoorSystem _doorSystem;
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
     private int _currentLevel = 1;
+
+    public int CurrentLevel
+    {
+        get => _currentLevel;
+        set => _currentLevel = value;
+    }
 
     public Game()
     {
@@ -51,6 +58,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _scriptSystem = new ScriptSystem();
         _enemySystem = new EnemySystem();
         _levelEditorSystem = new LevelEditorSystem();
+        _doorSystem = new DoorSystem(this);
 
         _previousKeyboardState = Keyboard.GetState();
 
@@ -105,6 +113,7 @@ public class Game : Microsoft.Xna.Framework.Game
             _scriptSystem.Update(gameTime);
             _enemySystem.Update(gameTime);
             _levelEditorSystem.Update(Window.Position, gameTime);
+            _doorSystem.Update(gameTime);
         }
 
         base.Update(gameTime);
@@ -126,7 +135,7 @@ public class Game : Microsoft.Xna.Framework.Game
         base.Draw(gameTime);
     }
 
-    private void LoadCurrentLevel()
+    public void LoadCurrentLevel()
     {
         var levelName = $"level{_currentLevel}";
         try

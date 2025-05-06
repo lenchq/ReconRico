@@ -72,24 +72,25 @@ public static class LevelManager
                     break;
 
                 case "solid_wall":
-                    Vector2 size1 = new(entity.Size[0], entity.Size[1]);
-                    createdEntity = EntityDirector.CreateSolidWallObstacle(position, size1, rotation);
+                    Vector2 solidWallSize = new(entity.Size[0], entity.Size[1]);
+                    createdEntity = EntityDirector.CreateSolidWallObstacle(position, solidWallSize, rotation);
                     break;
 
                 case "breakable_wall":
-                    Vector2 size2 = new(entity.Size[0], entity.Size[1]);
-                    createdEntity = EntityDirector.CreateBreakableWallObstacle(position, size2, rotation);
+                    Vector2 breakableWallSize = new(entity.Size[0], entity.Size[1]);
+                    createdEntity = EntityDirector.CreateBreakableWallObstacle(position, breakableWallSize, rotation);
                     break;
 
                 case "reflector_wall":
-                    Vector2 size3 = new(entity.Size[0], entity.Size[1]);
-                    createdEntity = EntityDirector.CreateReflectorWallObstacle(position, size3, rotation);
+                    Vector2 reflectorWallSize = new(entity.Size[0], entity.Size[1]);
+                    createdEntity = EntityDirector.CreateReflectorWallObstacle(position, reflectorWallSize, rotation);
                     break;
 
                 case "reflector_breakable_wall":
-                    Vector2 size4 = new(entity.Size[0], entity.Size[1]);
+                    Vector2 reflectorBreakableWallSize = new(entity.Size[0], entity.Size[1]);
                     createdEntity =
-                        EntityDirector.CreateReflectorBreakableWallObstacle(position, size4, rotation);
+                        EntityDirector.CreateReflectorBreakableWallObstacle(position, reflectorBreakableWallSize,
+                            rotation);
                     break;
                 case "enemy":
                     var patrolPoints = entity.PatrolPoints?
@@ -97,7 +98,10 @@ public static class LevelManager
                             => new Vector2(patrolCoords[0], patrolCoords[1]))
                         .ToArray();
                     createdEntity = EntityDirector.CreateEnemy(position, patrolPoints);
-
+                    break;
+                case "door":
+                    Vector2 doorSize = new(entity.Size[0], entity.Size[1]);
+                    createdEntity = EntityDirector.CreateDoor(position, doorSize);
                     break;
 
                 default:
