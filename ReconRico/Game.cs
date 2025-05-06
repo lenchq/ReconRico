@@ -21,9 +21,11 @@ public class Game : Microsoft.Xna.Framework.Game
     private GunSystem _gunSystem;
     private ScriptSystem _scriptSystem;
     private EnemySystem _enemySystem;
+    private UISystem _uiSystem;
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
+    private int _currentLevel = 1;
 
     public Game()
     {
@@ -49,7 +51,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _enemySystem = new EnemySystem();
 
         _previousKeyboardState = Keyboard.GetState();
-        
+
         SDL_SetWindowGrab(this.Window.Handle, true);
 
         base.Initialize();
@@ -59,19 +61,11 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _renderSystem = new RenderSystem(_spriteBatch);
+        _uiSystem = new UISystem(_spriteBatch);
 
         AssetsManager.Initialize(Content);
 
-        EntityManager.ClearEntities();
-
-        try
-        {
-            LevelManager.LoadLevel("level1");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Failed to load level: " + ex.Message);
-        }
+        LoadCurrentLevel();
     }
 
     protected override void Update(GameTime gameTime)
@@ -80,11 +74,18 @@ public class Game : Microsoft.Xna.Framework.Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        KeyboardState state = Keyboard.GetState();
-        if (state.IsKeyDown(Keys.P) && _previousKeyboardState.IsKeyUp(Keys.P))
+        var state = Keyboard.GetState();
+
+        if (IsKeyDown(Keys.R))
         {
-            _gameState = _gameState == GameState.Playing ? GameState.Paused : GameState.Playing;
+            EntityManager.ClearEntities();
+            LevelManager.LoadLevel("level1");
         }
+
+        if (EntityManager.GetEntitiesWithComponent<PlayerComponent>().FirstOrDefault() is null)
+            _gameState = GameState.GameOver;
+        else if (IsKeyDown(Keys.P))
+            _gameState = _gameState == GameState.Playing ? GameState.Paused : GameState.Playing;
 
         _previousKeyboardState = state;
 
@@ -101,6 +102,12 @@ public class Game : Microsoft.Xna.Framework.Game
         }
 
         base.Update(gameTime);
+        return;
+
+        bool IsKeyDown(Keys key)
+        {
+            return state.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
+        }
     }
 
     protected override void Draw(GameTime gameTime)
@@ -108,25 +115,23 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.White);
 
         _renderSystem.Render(gameTime);
-
-        if (_gameState == GameState.Paused)
-        {
-            _spriteBatch.Begin();
-
-            var font = AssetsManager.DefaultFont;
-            string pauseText = "Paused\nPress P to Resume";
-            Vector2 textSize = font.MeasureString(pauseText);
-            Vector2 position = new Vector2(
-                (GameSettings.WINDOW_WIDTH - textSize.X) / 2,
-                (GameSettings.WINDOW_HEIGHT - textSize.Y) / 2
-            );
-
-            _spriteBatch.DrawString(font, pauseText, position, Color.Black);
-
-            _spriteBatch.End();
-        }
+        _uiSystem.Render(gameTime, _gameState);
 
         base.Draw(gameTime);
+    }
+
+    private void LoadCurrentLevel()
+    {
+        var levelName = $"level{_currentLevel}";
+        try
+        {
+            EntityManager.ClearEntities();
+            LevelManager.LoadLevel(levelName);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load level {levelName}: {ex.Message}");
+        }
     }
 
     [System.Runtime.InteropServices.DllImport("SDL2.dll",

@@ -9,6 +9,7 @@ namespace ReconRico;
 public class Entity(long id)
 {
     public long Id { get; } = id;
+    public bool IsDestroyed = false;
     public List<IComponent> Components => _components.Values.ToList();
 
     private readonly Dictionary<Type, IComponent> _components = new();
@@ -50,6 +51,7 @@ public class Entity(long id)
 
     public virtual void Destroy()
     {
+        IsDestroyed = true;
         foreach (var component in _components.Values)
         {
             component.Destroy();

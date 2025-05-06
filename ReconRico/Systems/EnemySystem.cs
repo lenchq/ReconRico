@@ -7,16 +7,19 @@ public class EnemySystem
 {
     private const float MovementSpeed = .3f;
     private const float PatrolPointReachedDistance = 10f;
-    private Entity? _player;
+    private WeakReference<Entity?> _playerRef = new(null, false);
 
     public void Update(GameTime gameTime)
     {
         // Find player if not already found
-        if (_player == null)
+        if (!_playerRef.TryGetTarget(out var player) || player.IsDestroyed)
         {
-            _player = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
+            var playerEntity = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
                 .FirstOrDefault();
-            if (_player == null) return;
+            if (playerEntity is null)
+                return;
+            _playerRef.SetTarget(playerEntity);
+            player = playerEntity;
         }
 
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -47,7 +50,7 @@ public class EnemySystem
                 // Update last known position and alert state
                 enemyComponent.IsAlerted = true;
                 enemyComponent.AlertTimer = enemyComponent.AlertDuration;
-                enemyComponent.LastKnownPlayerPosition = _player.GetComponent<TransformComponent>().Position;
+                enemyComponent.LastKnownPlayerPosition = player.GetComponent<TransformComponent>().Position;
             }
 
             // Move towards target (either patrol point or player)
@@ -92,10 +95,11 @@ public class EnemySystem
 
     private bool CanSeePlayer(Entity enemy, TransformComponent enemyTransform)
     {
-        if (_player == null) return false;
+        if (!_playerRef.TryGetTarget(out var player))
+            return false;
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
-        var playerTransform = _player.GetComponent<TransformComponent>();
+        var playerTransform = player.GetComponent<TransformComponent>();
 
         // Check distance
         float distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
@@ -125,10 +129,11 @@ public class EnemySystem
 
     private bool CanHearPlayer(Entity enemy, TransformComponent enemyTransform)
     {
-        if (_player == null) return false;
+        if (!_playerRef.TryGetTarget(out var player))
+            return false;
 
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
-        var playerTransform = _player.GetComponent<TransformComponent>();
+        var playerTransform = player.GetComponent<TransformComponent>();
 
         // Check if player is within hearing radius
         float distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);

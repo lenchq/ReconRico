@@ -42,27 +42,25 @@ public static class EntityDirector
                 var targetPos = target.GetComponent<TransformComponent>();
                 var targetCollider = target.GetComponent<ColliderComponent>();
 
-                if (!target.TryGetComponent<ObstacleComponent>(out var obstacle)) return;
-
-                if (obstacle.BulletCollisionType == BulletCollisionType.Reflect)
-                {
-                    var reflectedVelocity = GunSystem.GetWallReflectedVelocity(velocity, bulletCollider, bulletPos,
-                        targetCollider, targetPos, bulletVel);
-
-                    bulletVel.Velocity = reflectedVelocity;
-                    bulletPos.Rotation =
-                        (float)Math.Atan2(reflectedVelocity.Y, reflectedVelocity.X) + MathHelper.PiOver2;
-                }
-                else
-                {
-                    bullet.Destroy();
-                }
-
-
-                // Check if target is breakable
-                if (obstacle.IsBreakable)
-                {
+                if (target.TryGetComponent<EnemyComponent>(out var enemy))
                     target.Destroy();
+
+                else if (target.TryGetComponent<ObstacleComponent>(out var obstacle))
+                {
+                    if (obstacle.BulletCollisionType == BulletCollisionType.Reflect)
+                    {
+                        var reflectedVelocity = GunSystem.GetWallReflectedVelocity(velocity, bulletCollider, bulletPos,
+                            targetCollider, targetPos, bulletVel);
+
+                        bulletVel.Velocity = reflectedVelocity;
+                        bulletPos.Rotation =
+                            (float)Math.Atan2(reflectedVelocity.Y, reflectedVelocity.X) + MathHelper.PiOver2;
+                    }
+                    else
+                        bullet.Destroy();
+
+                    if (obstacle.IsBreakable)
+                        target.Destroy();
                 }
             })
             .WithScript((entity, gt) =>
