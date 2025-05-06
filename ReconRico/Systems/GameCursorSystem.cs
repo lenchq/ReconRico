@@ -48,7 +48,8 @@ public class GameCursorSystem
             || currentMouse.Y <= 0
             || currentMouse.Y >= GameSettings.WINDOW_HEIGHT - 1)
         {
-            Mouse.SetPosition(GameSettings.WINDOW_WIDTH / 2, GameSettings.WINDOW_HEIGHT / 2);
+            if (GameSettings.GRAB_MOUSE)
+                Mouse.SetPosition(GameSettings.WINDOW_WIDTH / 2, GameSettings.WINDOW_HEIGHT / 2);
             _prevMouse = Mouse.GetState();
         }
         else

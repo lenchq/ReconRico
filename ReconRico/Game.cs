@@ -54,7 +54,8 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _previousKeyboardState = Keyboard.GetState();
 
-        SDL_SetWindowGrab(this.Window.Handle, true);
+        if (GameSettings.GRAB_MOUSE)
+            SDL_SetWindowGrab(this.Window.Handle, true);
 
         base.Initialize();
     }

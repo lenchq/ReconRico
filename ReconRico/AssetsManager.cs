@@ -14,7 +14,7 @@ public static class AssetsManager
     public static SpriteFont DefaultFont { get; private set; }
 
     public const string PAUSE_TEXT = "Game paused\nPress Tab to resume";
-
+    public const string GAME_OVER_TEXT = "GAME OVER\nPRESS R TO RETRY";
 
     public static void Initialize(ContentManager content)
     {

@@ -8,6 +8,21 @@ using ReconRico.General;
 
 namespace ReconRico;
 
+public class LevelData
+{
+    public List<LevelEntity> Entities { get; set; }
+}
+
+public class LevelEntity
+{
+    public string Type { get; set; }
+    public float[] Position { get; set; }
+    public float Rotation { get; set; }
+    public float[]? Velocity { get; set; }
+    public float[]? Size { get; set; }
+    public float[][]? PatrolPoints { get; set; }
+}
+
 public static class LevelManager
 {
     private const string LevelDirectory = "Levels";
@@ -78,11 +93,11 @@ public static class LevelManager
                     break;
                 case "enemy":
                     var patrolPoints = entity.PatrolPoints?
-                        .Select(patrolCoords 
+                        .Select(patrolCoords
                             => new Vector2(patrolCoords[0], patrolCoords[1]))
                         .ToArray();
                     createdEntity = EntityDirector.CreateEnemy(position, patrolPoints);
-                    
+
                     break;
 
                 default:
@@ -96,24 +111,6 @@ public static class LevelManager
 
         EntityManager.AddEntity(EntityDirector.CreateCursor());
         if (!hasPlayer)
-        {
             throw new InvalidDataException("Level must contain a player.");
-        }
     }
-}
-
-// DTOs for YAML
-public class LevelData
-{
-    public List<LevelEntity> Entities { get; set; }
-}
-
-public class LevelEntity
-{
-    public string Type { get; set; }
-    public float[] Position { get; set; }
-    public float Rotation { get; set; }
-    public float[]? Velocity { get; set; }
-    public float[]? Size { get; set; }
-    public float[][]? PatrolPoints { get; set; }
 }

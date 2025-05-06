@@ -24,7 +24,7 @@ public class GunSystem
             }
 
             Console.WriteLine("shoot");
-            var bulletOffset = Vector2.Rotate(Vector2.UnitY * -25f, entPos.Rotation);
+            var bulletOffset = Vector2.Rotate(Vector2.UnitY * -35f, entPos.Rotation);
             var bullet = EntityDirector.CreateBullet(entPos.Position + bulletOffset,
                 entPos.Rotation, Vector2.Rotate(-Vector2.UnitY * 800f, entPos.Rotation));
             EntityManager.AddEntity(bullet);

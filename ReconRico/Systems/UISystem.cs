@@ -44,7 +44,7 @@ public class UiSystem(SpriteBatch spriteBatch)
             return;
         var gun = player.GetComponent<GunComponent>();
 
-        var windowSize = new Point(100, 70);
+        var windowSize = new Point(115, 70);
         var windowPos = new Vector2( // padding from bottom left corner
             GameSettings.WINDOW_WIDTH - windowSize.X - 20,
             GameSettings.WINDOW_HEIGHT - windowSize.Y - 20
@@ -58,14 +58,14 @@ public class UiSystem(SpriteBatch spriteBatch)
         spriteBatch.Draw(windowRect, windowPos, Color.White);
 
         // bullet img
-        var bulletPos = windowPos + new Vector2(20, windowSize.Y / 2f);
+        var bulletPos = windowPos + new Vector2(25, windowSize.Y / 2f);
         spriteBatch.Draw(AssetsManager.Bullet,
             bulletPos,
             null,
             Color.White,
             0f,
             new Vector2(AssetsManager.Bullet.Width / 2f, AssetsManager.Bullet.Height / 2f),
-            1f,
+            .8f,
             SpriteEffects.None,
             1f);
 
@@ -103,7 +103,7 @@ public class UiSystem(SpriteBatch spriteBatch)
 
     private void DrawGameOverScreen()
     {
-        const string gameOverText = "GAME OVER\nPRESS R TO RETRY";
+        var gameOverText = AssetsManager.GAME_OVER_TEXT;
         var font = AssetsManager.DefaultFont;
         var textSize = font.MeasureString(gameOverText);
 

@@ -65,7 +65,7 @@ public class EnemySystem
                 targetPosition = enemyComponent.LastKnownPlayerPosition.Value;
             else if (enemyComponent.PatrolPoints.Length > 0)
                 targetPosition = enemyComponent.PatrolPoints[enemyComponent.CurrentPatrolIndex];
-            else
+            else // No patrol points, no player visible
                 return;
 
             var direction = targetPosition - transform.Position;
@@ -79,9 +79,16 @@ public class EnemySystem
             else
                 velocity.Velocity = Vector2.Zero;
 
+            // Check if enemy is close enough to destroy player
+            if (Vector2.Distance(transform.Position, player.GetComponent<TransformComponent>().Position) <= 70f)
+            {
+                player.Destroy();
+                SfxManager.PlayExplosion();
+            }
+
             if (!enemyComponent.IsAlerted &&
                 Vector2.Distance(transform.Position, targetPosition) < PatrolPointReachedDistance)
-                // Move to next patrol point
+                // Move to the next patrol point
                 enemyComponent.CurrentPatrolIndex =
                     (enemyComponent.CurrentPatrolIndex + 1) % enemyComponent.PatrolPoints.Length;
         }

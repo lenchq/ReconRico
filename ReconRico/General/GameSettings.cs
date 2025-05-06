@@ -29,6 +29,7 @@ static class GameSettings
     public const Keys CAMERA_CONTROL_FLY = Keys.LeftShift;
 
     public const bool IS_MOUSE_VISIBLE = true;
+    public const bool GRAB_MOUSE = false;
 
     #endregion
 

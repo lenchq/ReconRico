@@ -23,15 +23,15 @@ public static class EntityDirector
     public static Entity CreateBullet(Vector2 position, float rotation, Vector2 velocity)
     {
         return Builder
-            .WithTransform(position, rotation, new Vector2(0.5f, 0.5f), -1)
+            .WithTransform(position, rotation, new Vector2(0.5f, 0.5f), 0)
             .WithVelocity(velocity)
             .WithSprite(AssetsManager.Bullet)
-            .WithCollider(new Vector2(6f, 6f))
+            .WithCollider(new Vector2(12, 12))
             .WithColliderResponse(e =>
             {
                 var bullet = EntityManager.Entities[e.SourceId];
                 var target = EntityManager.Entities[e.TargetId];
-                
+
                 if (target.IsDestroyed) return;
 
                 if (target.HasComponent<PlayerComponent>())
