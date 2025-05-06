@@ -27,13 +27,14 @@ public class EntityBuilder
         return this;
     }
 
-    public EntityBuilder WithSprite(Texture2D sprite, SpriteEffects effects = SpriteEffects.None,
+    public EntityBuilder WithSprite(Texture2D sprite, bool tiled = false, SpriteEffects effects = SpriteEffects.None,
         Color? colorMask = null)
     {
         _entity.RegisterComponent(new SpriteComponent
         {
             Texture = sprite,
             SpriteEffects = effects,
+            Tiled = tiled,
             ColorMask = colorMask ?? Color.White,
         });
         return this;
@@ -102,6 +103,12 @@ public class EntityBuilder
     public EntityBuilder WithComponent(IComponent component)
     {
         _entity.RegisterComponent(component);
+        return this;
+    }
+
+    public EntityBuilder OnDestroy(Action<Entity> onDestroy)
+    {
+        _entity.OnDestroy += onDestroy;
         return this;
     }
 

@@ -7,8 +7,7 @@ namespace ReconRico.Systems;
 
 public class RenderSystem(SpriteBatch spriteBatch)
 {
-    private readonly Dictionary<(Point size, Color? fillColor, int border, Color? borderColor), Texture2D> _gizmoCache =
-        new();
+    private TextureCreator _creator = new TextureCreator(spriteBatch);
 
     public void Render(GameTime gameTime)
     {
@@ -20,17 +19,11 @@ public class RenderSystem(SpriteBatch spriteBatch)
             var sprite = entity.GetComponent<SpriteComponent>();
             var transform = entity.GetComponent<TransformComponent>();
 
-            Rectangle? spriteSize = null;
-            if (entity.TryGetComponent<ColliderComponent>(out var collider))
-            {
-                spriteSize = new Rectangle(Point.Zero, collider.Collider.ToPoint());
-            }
-
             var offset = new Vector2(sprite.Texture.Width / 2f, sprite.Texture.Height / 2f);
 
             spriteBatch.Draw(sprite.Texture,
                 transform.Position,
-                spriteSize,
+                null,
                 sprite.ColorMask,
                 transform.Rotation,
                 offset,
@@ -69,39 +62,9 @@ public class RenderSystem(SpriteBatch spriteBatch)
         spriteBatch.End();
     }
 
-    private Texture2D CreateRectangle(int width, int height, Color? fillColor = null, int border = 0,
-        Color? borderColor = null)
-    {
-        var cacheKey = (new Point(width, height), fillColor, border, borderColor);
-        if (_gizmoCache.TryGetValue(cacheKey, out var texture))
-            return texture;
-
-        fillColor ??= Color.Transparent;
-        borderColor ??= Color.Transparent;
-
-        var rect = new Texture2D(spriteBatch.GraphicsDevice, width, height);
-        var colors = new Color[height][];
-        for (var i = 0; i < height; i++)
-            colors[i] = Enumerable.Repeat((Color)fillColor, width).ToArray();
-
-        for (var i = 0; i < height; i++)
-        for (var j = 0; j < width; j++)
-            if (i < border || i >= height - border ||
-                j < border || j >= width - border)
-                colors[i][j] = (Color)borderColor;
-
-        rect.SetData(colors
-            .SelectMany(x => x)
-            .ToArray());
-
-        _gizmoCache[cacheKey] = rect;
-
-        return rect;
-    }
-
     private void DrawBorderedRectangle(Point position, Point size, Color color, int border, float rotation)
     {
-        var rect = CreateRectangle(size.X, size.Y, border: border, borderColor: color);
+        var rect = _creator.CreateBorderedRectangle(size.X, size.Y, border: border, borderColor: color);
 
         var originToCenter = (size / new Point(2)).ToVector2();
         spriteBatch.Draw(rect,

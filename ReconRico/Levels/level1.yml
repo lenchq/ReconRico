@@ -51,11 +51,11 @@ entities:
       - 376
   - type: reflector_wall
     position:
-      - 360
+      - 330
       - 431
     rotation: 0
     size:
-      - 366
+      - 450
       - 146
   - type: solid_wall
     position:

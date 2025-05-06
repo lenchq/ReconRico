@@ -8,6 +8,8 @@ namespace ReconRico;
 
 public class Entity(long id)
 {
+    public event Action<Entity> OnDestroy; 
+    
     public long Id { get; } = id;
     public bool IsDestroyed = false;
     public List<IComponent> Components => _components.Values.ToList();
@@ -52,6 +54,7 @@ public class Entity(long id)
     public virtual void Destroy()
     {
         IsDestroyed = true;
+        OnDestroy?.Invoke(this);
         foreach (var component in _components.Values)
         {
             component.Destroy();

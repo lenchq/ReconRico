@@ -21,7 +21,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private GunSystem _gunSystem;
     private ScriptSystem _scriptSystem;
     private EnemySystem _enemySystem;
-    private UISystem _uiSystem;
+    private UiSystem _uiSystem;
     private LevelEditorSystem _levelEditorSystem;
 
     private GameState _gameState = GameState.Playing;
@@ -63,9 +63,10 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _renderSystem = new RenderSystem(_spriteBatch);
-        _uiSystem = new UISystem(_spriteBatch);
+        _uiSystem = new UiSystem(_spriteBatch);
 
         AssetsManager.Initialize(Content);
+        SfxManager.Initialize(Content);
 
         LoadCurrentLevel();
     }
@@ -80,13 +81,12 @@ public class Game : Microsoft.Xna.Framework.Game
 
         if (IsKeyDown(Keys.R))
         {
-            EntityManager.ClearEntities();
-            LevelManager.LoadLevel("level1");
+            LoadCurrentLevel();
         }
 
         if (EntityManager.GetEntitiesWithComponent<PlayerComponent>().FirstOrDefault() is null)
             _gameState = GameState.GameOver;
-        else if (IsKeyDown(Keys.P))
+        else if (IsKeyDown(Keys.Tab))
             _gameState = _gameState == GameState.Playing ? GameState.Paused : GameState.Playing;
 
         _previousKeyboardState = state;
@@ -128,8 +128,11 @@ public class Game : Microsoft.Xna.Framework.Game
         var levelName = $"level{_currentLevel}";
         try
         {
-            EntityManager.ClearEntities();
+            SfxManager.SoundsEnabled = false;
+            EntityManager.DestroyEntities();
             LevelManager.LoadLevel(levelName);
+            SfxManager.SoundsEnabled = true;
+            SfxManager.PlayResume();
         }
         catch (Exception ex)
         {

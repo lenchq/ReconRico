@@ -5,14 +5,15 @@ namespace ReconRico.Systems;
 
 public class EnemySystem
 {
-    private const float MovementSpeed = .3f;
+    private const float MovementSpeed = .5f;
     private const float PatrolPointReachedDistance = 10f;
-    private WeakReference<Entity?> _playerRef = new(null, false);
+    private readonly WeakReference<Entity?> _playerRef = new(null, false);
 
     public void Update(GameTime gameTime)
     {
         // Find player if not already found
-        if (!_playerRef.TryGetTarget(out var player) || player.IsDestroyed)
+        if (!_playerRef.TryGetTarget(out var player)
+            || player.IsDestroyed)
         {
             var playerEntity = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
                 .FirstOrDefault();
@@ -22,13 +23,15 @@ public class EnemySystem
             player = playerEntity;
         }
 
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+        var deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
         foreach (var enemy in EntityManager.GetEntitiesWithAll(typeof(EnemyComponent)))
         {
             var enemyComponent = enemy.GetComponent<EnemyComponent>();
             var transform = enemy.GetComponent<TransformComponent>();
             var velocity = enemy.GetComponent<VelocityComponent>();
+
+            var wasAlerted = enemyComponent.IsAlerted;
 
             // Update alert timer
             if (enemyComponent.IsAlerted)
@@ -51,49 +54,36 @@ public class EnemySystem
                 enemyComponent.IsAlerted = true;
                 enemyComponent.AlertTimer = enemyComponent.AlertDuration;
                 enemyComponent.LastKnownPlayerPosition = player.GetComponent<TransformComponent>().Position;
+
+                if (!wasAlerted)
+                    SfxManager.PlayAlarm();
             }
 
             // Move towards target (either patrol point or player)
             Vector2 targetPosition;
             if (enemyComponent.IsAlerted && enemyComponent.LastKnownPlayerPosition.HasValue)
-            {
                 targetPosition = enemyComponent.LastKnownPlayerPosition.Value;
-            }
             else if (enemyComponent.PatrolPoints.Length > 0)
-            {
                 targetPosition = enemyComponent.PatrolPoints[enemyComponent.CurrentPatrolIndex];
-            }
             else
-            {
                 return;
-            }
 
-            // Calculate direction to target
-            Vector2 direction = targetPosition - transform.Position;
+            var direction = targetPosition - transform.Position;
             if (direction != Vector2.Zero &&
                 Vector2.Distance(transform.Position, targetPosition) > 2f)
             {
                 direction.Normalize();
-
-                // Update velocity
                 velocity.Velocity = direction * MovementSpeed;
-
-                // Update rotation to face movement direction
                 transform.Rotation = (float)Math.Atan2(direction.Y, direction.X) + MathHelper.PiOver2;
             }
             else
-            {
                 velocity.Velocity = Vector2.Zero;
-            }
 
-            // Check if reached patrol point
             if (!enemyComponent.IsAlerted &&
                 Vector2.Distance(transform.Position, targetPosition) < PatrolPointReachedDistance)
-            {
                 // Move to next patrol point
                 enemyComponent.CurrentPatrolIndex =
                     (enemyComponent.CurrentPatrolIndex + 1) % enemyComponent.PatrolPoints.Length;
-            }
         }
     }
 
@@ -106,23 +96,24 @@ public class EnemySystem
         var playerTransform = player.GetComponent<TransformComponent>();
 
         // Check distance
-        float distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
-        if (distance > enemyComponent.VisionRadius) return false;
+        var distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
+        if (distance > enemyComponent.VisionRadius)
+            return false;
 
         // Check if player is within vision angle
-        Vector2 directionToPlayer = playerTransform.Position - enemyTransform.Position;
+        var directionToPlayer = playerTransform.Position - enemyTransform.Position;
         directionToPlayer.Normalize();
 
         // Convert enemy's forward direction to angle
-        float enemyAngle = enemyTransform.Rotation - MathHelper.PiOver2; // Adjust for sprite orientation
-        Vector2 enemyForward = new Vector2(
+        var enemyAngle = enemyTransform.Rotation - MathHelper.PiOver2; // Adjust for sprite orientation
+        var enemyForward = new Vector2(
             (float)Math.Cos(enemyAngle),
             (float)Math.Sin(enemyAngle)
         );
 
         // Calculate angle between enemy's forward direction and direction to player
-        float angle = (float)Math.Acos(Vector2.Dot(enemyForward, directionToPlayer));
-        float angleDegrees = MathHelper.ToDegrees(angle);
+        var angle = (float)Math.Acos(Vector2.Dot(enemyForward, directionToPlayer));
+        var angleDegrees = MathHelper.ToDegrees(angle);
 
         // Check if angle is within vision cone
         if (angleDegrees > enemyComponent.VisionAngle / 2) return false;
@@ -139,9 +130,9 @@ public class EnemySystem
         var enemyComponent = enemy.GetComponent<EnemyComponent>();
         var playerTransform = player.GetComponent<TransformComponent>();
 
-        // Check if player is within hearing radius
-        float distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
-        return distance <= enemyComponent.HearRadius;
+        // if player is within hearing radius
+        var dist = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
+        return dist <= enemyComponent.HearRadius;
     }
 
     private bool HasLineOfSightBlocked(Vector2 start, Vector2 end)
@@ -165,39 +156,43 @@ public class EnemySystem
 
     private bool LineIntersectsRectangle(Vector2 start, Vector2 end, Rectangle rect)
     {
-        // Check if line intersects any of the rectangle's edges
-        Vector2[] corners = new Vector2[]
-        {
-            new Vector2(rect.Left, rect.Top),
-            new Vector2(rect.Right, rect.Top),
-            new Vector2(rect.Right, rect.Bottom),
-            new Vector2(rect.Left, rect.Bottom)
-        };
+        // Check intersection on any of the rectangle edges
+        Vector2[] corners =
+        [
+            new(rect.Left, rect.Top),
+            new(rect.Right, rect.Top),
+            new(rect.Right, rect.Bottom),
+            new(rect.Left, rect.Bottom)
+        ];
 
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            Vector2 p1 = corners[i];
-            Vector2 p2 = corners[(i + 1) % 4];
+            var p1 = corners[i];
+            var p2 = corners[(i + 1) % 4];
 
             if (LinesIntersect(start, end, p1, p2))
-            {
                 return true;
-            }
         }
 
         return false;
     }
 
-    private bool LinesIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+    private static bool LinesIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
     {
-        float denominator = (p4.Y - p3.Y) * (p2.X - p1.X) - (p4.X - p3.X) * (p2.Y - p1.Y);
+        var denominator = (p4.Y - p3.Y) * (p2.X - p1.X) - (p4.X - p3.X) * (p2.Y - p1.Y);
 
         if (denominator == 0)
             return false;
 
-        float ua = ((p4.X - p3.X) * (p1.Y - p3.Y) - (p4.Y - p3.Y) * (p1.X - p3.X)) / denominator;
-        float ub = ((p2.X - p1.X) * (p1.Y - p3.Y) - (p2.Y - p1.Y) * (p1.X - p3.X)) / denominator;
+        var ua = (
+            (p4.X - p3.X) * (p1.Y - p3.Y)
+            - (p4.Y - p3.Y) * (p1.X - p3.X)
+        ) / denominator;
+        var ub = (
+            (p2.X - p1.X) * (p1.Y - p3.Y)
+            - (p2.Y - p1.Y) * (p1.X - p3.X)
+        ) / denominator;
 
-        return ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1;
+        return ua is >= 0 and <= 1 && ub is >= 0 and <= 1;
     }
 }

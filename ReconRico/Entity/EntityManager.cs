@@ -63,7 +63,7 @@ public static class EntityManager
             );
     }
 
-    public static void ClearEntities()
+    public static void DestroyEntities()
     {
         foreach (var entity in Entities.Values)
         {
