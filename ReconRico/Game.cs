@@ -82,6 +82,8 @@ public class Game : Microsoft.Xna.Framework.Game
         if (IsKeyDown(Keys.R))
         {
             LoadCurrentLevel();
+            _gameState = GameState.Playing;
+            return;
         }
 
         if (EntityManager.GetEntitiesWithComponent<PlayerComponent>().FirstOrDefault() is null)

@@ -19,21 +19,17 @@ public class UiSystem(SpriteBatch spriteBatch)
         switch (gameState)
         {
             case GameState.Paused:
-            {
                 DrawPauseScreen();
 
                 if (_prevGameState != GameState.Paused)
                     SfxManager.PlayPause();
                 break;
-            }
             case GameState.Playing when _prevGameState == GameState.Paused:
                 SfxManager.PlayPause();
                 break;
             case GameState.GameOver:
-            {
-                // TODO game over screen
+                DrawGameOverScreen();
                 break;
-            }
         }
 
         spriteBatch.End();
@@ -103,5 +99,30 @@ public class UiSystem(SpriteBatch spriteBatch)
             new Vector2(640 - windowSize.X / 2f,
                 360 - windowSize.Y / 2f), Color.White);
         spriteBatch.DrawString(font, pauseText, position, Color.White);
+    }
+
+    private void DrawGameOverScreen()
+    {
+        const string gameOverText = "GAME OVER\nPRESS R TO RETRY";
+        var font = AssetsManager.DefaultFont;
+        var textSize = font.MeasureString(gameOverText);
+
+        // Create 800x800 window centered on screen
+        var windowSize = new Point(450, 100);
+        var windowPos = new Vector2(
+            (GameSettings.WINDOW_WIDTH - windowSize.X) / 2f,
+            (GameSettings.WINDOW_HEIGHT - windowSize.Y) / 2f
+        );
+
+        // Draw red window with black border
+        var windowRect = _textureCreator.CreateBorderedRectangle(windowSize.X, windowSize.Y, Color.Red, 3, Color.Black);
+        spriteBatch.Draw(windowRect, windowPos, Color.White);
+
+        // Draw "GAME OVER" text centered in window
+        var textPos = windowPos + new Vector2(
+            (windowSize.X - textSize.X) / 2f,
+            (windowSize.Y - textSize.Y) / 2f
+        );
+        spriteBatch.DrawString(font, gameOverText, textPos, Color.White);
     }
 }
