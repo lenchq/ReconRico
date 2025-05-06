@@ -27,7 +27,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private GameState _gameState = GameState.Playing;
     private KeyboardState _previousKeyboardState;
-    private int _currentLevel = 3;
+    private int _currentLevel = 1;
 
     public int CurrentLevel
     {
