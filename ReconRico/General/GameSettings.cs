@@ -4,7 +4,7 @@ namespace ReconRico.General;
 
 static class GameSettings
 {
-    public const bool DEBUG = true;
+    public const bool DEBUG = false;
 
     #region GRAPHICS
 
@@ -12,7 +12,8 @@ static class GameSettings
     public const int WINDOW_HEIGHT = 720;
 
     #endregion
-
+    
+    public const int LEVEL_COUNT = 5;
 
     #region PLAYER CONTROLS
 

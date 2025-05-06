@@ -72,7 +72,7 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _renderSystem = new RenderSystem(_spriteBatch);
-        _uiSystem = new UiSystem(_spriteBatch);
+        _uiSystem = new UiSystem(_spriteBatch, this);
 
         AssetsManager.Initialize(Content);
         SfxManager.Initialize(Content);
@@ -90,7 +90,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         if (IsKeyDown(Keys.R))
         {
-            if (_currentLevel == 5)
+            if (_currentLevel >= GameSettings.LEVEL_COUNT)
                 _currentLevel = 1;
             LoadCurrentLevel();
             _gameState = GameState.Playing;

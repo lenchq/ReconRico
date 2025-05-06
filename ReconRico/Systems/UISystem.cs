@@ -6,7 +6,7 @@ using ReconRico.Components;
 
 namespace ReconRico.Systems;
 
-public class UiSystem(SpriteBatch spriteBatch)
+public class UiSystem(SpriteBatch spriteBatch, Game _game)
 {
     private GameState _prevGameState;
     private TextureCreator _textureCreator = new(spriteBatch);
@@ -103,18 +103,25 @@ public class UiSystem(SpriteBatch spriteBatch)
 
     private void DrawGameOverScreen()
     {
-        var gameOverText = AssetsManager.GAME_OVER_TEXT;
+        var isWin = _game.CurrentLevel >= GameSettings.LEVEL_COUNT;
+
+        var gameOverText = isWin
+            ? "You Won!\nPRESS R TO RESTART"
+            : AssetsManager.GAME_OVER_TEXT;
         var font = AssetsManager.DefaultFont;
         var textSize = font.MeasureString(gameOverText);
-        
+
         var windowSize = new Point(450, 100);
         var windowPos = new Vector2(
             (GameSettings.WINDOW_WIDTH - windowSize.X) / 2f,
             (GameSettings.WINDOW_HEIGHT - windowSize.Y) / 2f
         );
-        var windowRect = _textureCreator.CreateBorderedRectangle(windowSize.X, windowSize.Y, Color.Red, 3, Color.Black);
+        var windowBg = isWin
+            ? Color.LimeGreen
+            : Color.Red;
+        var windowRect = _textureCreator.CreateBorderedRectangle(windowSize.X, windowSize.Y, windowBg, 3, Color.Black);
         spriteBatch.Draw(windowRect, windowPos, Color.White);
-        
+
         var textPos = windowPos + new Vector2(
             (windowSize.X - textSize.X) / 2f,
             (windowSize.Y - textSize.Y) / 2f
