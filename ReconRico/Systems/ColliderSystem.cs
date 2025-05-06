@@ -82,13 +82,9 @@ public class ColliderSystem
         var bHasVelocity = b.Entity.HasComponent<VelocityComponent>();
 
         if (aHasVelocity && !bHasVelocity)
-        {
             aTransform.Position -= direction * pushDistance;
-        }
         else if (!aHasVelocity && bHasVelocity)
-        {
             bTransform.Position += direction * pushDistance;
-        }
         else
         {
             // If both or neither have velocity, move both apart
