@@ -1,24 +1,82 @@
 entities:
   - type: player
-    position: [ 100, 600 ]
+    position: [ 140, 670 ]
     rotation: 0
 
+  # Отражающие стены по периметру
   - type: reflector_wall
-    position: [ 200, 500 ]
-    size: [ 128, 32 ]
-    rotation: 12
-
+    position: [ 640, 720 ]
+    size: [ 1280, 20 ]
   - type: reflector_wall
-    position: [ 400, 400 ]
-    size: [ 128, 32 ]
-    rotation: -18
-
+    position: [ 640, 20 ]
+    size: [ 1280, 20 ]
   - type: reflector_wall
-    position: [ 600, 300 ]
-    size: [ 128, 32 ]
-    rotation: -18
+    position: [ 640, 780 ]
+    size: [ 1280, 20 ]
+  - type: reflector_wall
+    position: [ 20, 400 ]
+    size: [ 20, 720 ]
+  - type: reflector_wall
+    position: [ 1270, 500 ]
+    size: [ 20, 600 ]
 
-  - type: bullet
-    position: [ 150, 580 ]
-    rotation: 30
-    velocity: [ 2, -3 ]
+  # Внутренние стеклянные стены (лабиринт)
+  - type: pass_breakable_wall
+    position: [ 320, 400 ]
+    size: [ 10, 300 ]
+  - type: pass_breakable_wall
+    position: [ 480, 600 ]
+    size: [ 200, 10 ]
+  - type: pass_breakable_wall
+    position: [ 800, 500 ]
+    size: [ 10, 300 ]
+  - type: pass_breakable_wall
+    position: [ 640, 300 ]
+    size: [ 200, 10 ]
+  - type: pass_breakable_wall
+    position: [ 960, 400 ]
+    size: [ 10, 300 ]
+  - type: pass_breakable_wall
+    position: [ 480, 200 ]
+    size: [ 200, 10 ]
+  - type: pass_breakable_wall
+    position: [ 800, 100 ]
+    size: [ 10, 200 ]
+
+  # Несколько врагов патрулируют между стеклянными перегородками
+  - type: enemy
+    position: [ 300, 500 ]
+    rotation: 0
+    patrolPoints: [ [ 300, 500 ], [ 500, 500 ] ]
+  - type: enemy
+    position: [ 700, 400 ]
+    rotation: 0
+    patrolPoints: [ [ 700, 400 ], [ 900, 400 ] ]
+  - type: enemy
+    position: [ 1000, 600 ]
+    rotation: 0
+    patrolPoints: [ [ 1000, 600 ], [ 1000, 300 ] ]
+  - type: enemy
+    position: [ 500, 100 ]
+    rotation: 0
+    patrolPoints: [ [ 500, 100 ], [ 800, 100 ] ]
+  - type: enemy
+    position: [ 736, 280 ]
+    rotation: 0
+    patrolPoints: [ ]
+
+  # Несколько разрушаемых коробок (мешают прямым выстрелам)
+  - type: absorb_breakable_wall
+    position: [ 400, 700 ]
+    size: [ 30, 30 ]
+  - type: absorb_breakable_wall
+    position: [ 850, 700 ]
+    size: [ 30, 30 ]
+  - type: absorb_breakable_wall
+    position: [ 640, 500 ]
+    size: [ 30, 30 ]
+
+  # Дверь для завершения уровня
+  - type: door
+    position: [ 1280, 100 ]
+    size: [ 80, 200 ]
