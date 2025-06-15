@@ -4,7 +4,11 @@ namespace ReconRico.General;
 
 static class GameSettings
 {
+    #if DEBUG
+    public const bool DEBUG = true;
+    #elif !DEBUG
     public const bool DEBUG = false;
+    #endif
 
     #region GRAPHICS
 
