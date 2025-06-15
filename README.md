@@ -1,4 +1,5 @@
 # ReconRico
+[Код на гитхабе](https://github.com/lenchq/ReconRico)
 
 ## 2D рикошет шутер
 
