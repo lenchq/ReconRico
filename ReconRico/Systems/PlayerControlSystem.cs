@@ -10,7 +10,7 @@ public class PlayerControlSystem
     public void Update(Game game)
     {
         if (!game.IsActive) return;
-        
+
         var player = EntityManager.GetEntitiesWithComponent<PlayerComponent>()
             .FirstOrDefault();
 
@@ -30,6 +30,13 @@ public class PlayerControlSystem
             moveVelocity += Vector2.UnitY * GameSettings.PLAYER_MOVE_VERTICAL_SPEED;
         }
 
+        var mouse = Mouse.GetState();
+        var cursor = EntityManager.GetEntitiesWithComponent<GameCursorComponent>()
+            .FirstOrDefault();
+
+        if (cursor is not null)
+            RotateToGameCursor(cursor, player, ref moveVelocity);
+
         if (keyboard.IsKeyDown(GameSettings.PLAYER_MOVE_LEFT_KEY))
         {
             moveVelocity -= Vector2.UnitX * GameSettings.PLAYER_MOVE_HORIZONTAL_SPEED;
@@ -38,13 +45,6 @@ public class PlayerControlSystem
         {
             moveVelocity += Vector2.UnitX * GameSettings.PLAYER_MOVE_HORIZONTAL_SPEED;
         }
-
-        var mouse = Mouse.GetState();
-        var cursor = EntityManager.GetEntitiesWithComponent<GameCursorComponent>()
-            .FirstOrDefault();
-
-        if (cursor is not null)
-            RotateToGameCursor(cursor, player, ref moveVelocity);
 
         var gun = player.GetComponent<GunComponent>();
         gun.ShootRequested = mouse.LeftButton == ButtonState.Pressed;
